@@ -8,14 +8,17 @@ public class AuditMain
     public static void main(String[] args)
     {
       //Var for reading the file that contains the database conf (IP, port, user, pas ...).
-      String v_dbConfFilePath             = new String("targetDB.conf");
-        File v_targetDBFile               = new File(v_dbConfFilePath);
+      String v_targetDBFilePath           = new String("targetDB.conf");
+        File v_targetDBFile               = new File(v_targetDBFilePath);
       BufferedReader v_buff               = null;
         int v_isReading                   = 1;
       TreeMap<String, String> v_mapDBConf = new TreeMap<>();
         String v_paramMap1                = "";
         String v_paramMap2                = "";
         String v_concat                   = "";
+
+      //Var for Database connection.
+      Database v_dbToConnect;
 
       //Browses and extract data from DB target conf file.
       //List of params in this file : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_NAME, DB_USER, DB_PASS
@@ -25,7 +28,7 @@ public class AuditMain
       }
       catch (FileNotFoundException e)
       {
-        System.out.println("(AuditMain.java) -> File not found : " + v_dbConfFilePath);
+        System.out.println("(AuditMain.java) -> File not found : " + v_targetDBFilePath);
       }
 
       try
@@ -67,7 +70,9 @@ public class AuditMain
           e.printStackTrace();
         }
       }
-      System.out.println(v_mapDBConf);
-      System.out.println(v_mapDBConf.get("DB_IP_ADDR"));
+      //Tests.
+      v_dbToConnect = new Database(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_NAME"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_TYPE"), v_mapDBConf.get("DB_USER"));
+      System.out.println(v_dbToConnect.getIp());
+      System.out.println(v_dbToConnect.getPort());
     }
 }
