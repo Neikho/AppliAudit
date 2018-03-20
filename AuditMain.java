@@ -25,22 +25,17 @@ public class AuditMain
         String v_toAddMap                   = "";
       //Variables communes pour lire fichier de conf et lire le fichier des queries.
       String v_concat                     = "";
-      //Variables pour la connection à la DB cible.
+      //Variables pour la connection et execution vers la DB cible.
       Database v_database;
+      Statement v_state = null;
+      ResultSet v_resQuery;
+      ResultSetMetaData v_resQueryData;
 
       //Parcours et extrait les données du fichier de conf de la DB cible vers un TreeMap.
       //Paramètres de ce fichier de conf : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_SID, DB_USER, DB_PASS
       try
       {
         v_buffDbConf = new BufferedReader(new FileReader(v_targetDBFile));
-      }
-      catch (FileNotFoundException e)
-      {
-        System.out.println("(AuditMain.java) -> File not found : " + v_targetDBFilePath);
-      }
-
-      try
-      {
         while ((v_isReading = v_buffDbConf.read()) != -1)
         {
             switch ((char) v_isReading)
@@ -84,30 +79,23 @@ public class AuditMain
       try
       {
         v_buffQueries = new BufferedReader(new FileReader(v_targetQueriesFile));
-      }
-      catch (FileNotFoundException e)
-      {
-        System.out.println("(AuditMain.java) -> File not found : " + v_targetQueriesFilePath);
-      }
-
-      try
-      {
         v_concat = "";
         v_toAddMap = "";
         while ((v_concat = v_buffQueries.readLine()) != null)
         {
+          v_toAddMap = v_toAddMap + v_concat;
           if (v_concat.contains(";"))
           {
-            v_toAddMap = v_toAddMap + v_concat;
+            v_toAddMap = v_toAddMap.replace(";", "");
             v_mapQueries.put(v_compteur, v_toAddMap);
             v_compteur = v_compteur + 1;
             v_toAddMap = "";
           }
-          else
-          {
-            v_toAddMap = v_toAddMap + v_concat;
-          }
         }
+      }
+      catch (FileNotFoundException e)
+      {
+        System.out.println("(AuditMain.java) -> File not found : " + v_targetQueriesFilePath);
       }
       catch (IOException e)
       {
@@ -124,6 +112,7 @@ public class AuditMain
           e.printStackTrace();
         }
       }
+
       //Tests.
       v_database = new Database(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_SID"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_TYPE"), v_mapDBConf.get("DB_USER"));
 
@@ -134,12 +123,37 @@ public class AuditMain
       else
         System.out.println("Error, not connected to Database.");
 
-      //Parcours et afficher les queries extraites du fichier.
-      for(Map.Entry<Integer,String> entry : v_mapQueries.entrySet())
+      //Parcours et execute les queries extraites du fichier.
+      try
       {
-        Integer key = entry.getKey();
-        String value = entry.getValue();
-        System.out.println(key + " => " + value);
+        v_state = v_database.getCon().createStatement();
+        for(Map.Entry<Integer,String> entry : v_mapQueries.entrySet())
+        {
+          Integer v_key = entry.getKey();
+          String v_query = entry.getValue();
+          System.out.println(v_key + " => " + v_query);
+          v_resQuery = v_state.executeQuery(v_query);
+          v_resQueryData = v_resQuery.getMetaData();
+          System.out.println("\n**********************************");
+          System.out.println("\nCOLUMNS");
+          System.out.println("\n**********************************");
+          System.out.println("- Il y a " + v_resQueryData.getColumnCount() + " colonnes dans cette table");
+          System.out.println("\n**********************************");
+          System.out.println("\nDATAS");
+          System.out.println("\n**********************************");
+          while(v_resQuery.next())
+          {
+            for(int i = 1; i <= v_resQueryData.getColumnCount(); i++)
+            {
+              System.out.println("\t *" + v_resQuery.getString(v_resQueryData.getColumnName(i)));
+            }
+          }
+          System.out.println("\n**********************************");
+        }
+      }
+      catch(SQLException e)
+      {
+        e.printStackTrace();
       }
 
       //Se déconnecte de la base.
@@ -148,8 +162,5 @@ public class AuditMain
         System.out.println("Disconnected from Database.");
       else
         System.out.println("Error, still connected to Database.");
-
-        String str1 = "select * from dual;";
-      System.out.println(str1.toLowerCase().contains(";"));
     }
 }
