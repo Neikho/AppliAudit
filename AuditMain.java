@@ -12,18 +12,19 @@ public class AuditMain
       String v_targetDBFilePath           = new String("targetDB.conf");
         File v_targetDBFile               = new File(v_targetDBFilePath);
       BufferedReader v_buffDbConf         = null;
+        int v_isReading                     = 1;
       TreeMap<String, String> v_mapDBConf = new TreeMap<>();
+        String v_paramMap1                  = "";
+        String v_paramMap2                  = "";
       //Variables pour lire le fichier des queries à executer.
       String v_targetQueriesFilePath      = new String("queriesToExec.sql");
         File v_targetQueriesFile          = new File(v_targetQueriesFilePath);
       BufferedReader v_buffQueries        = null;
       TreeMap<Integer, String> v_mapQueries = new TreeMap<>();
         Integer v_compteur                      = 1;
+        String v_toAddMap                   = "";
       //Variables communes pour lire fichier de conf et lire le fichier des queries.
-      int v_isReading                   = 1;
-      String v_concat                   = "";
-      String v_paramMap1                = "";
-      String v_paramMap2                = "";
+      String v_concat                     = "";
       //Variables pour la connection à la DB cible.
       Database v_database;
 
@@ -91,27 +92,21 @@ public class AuditMain
 
       try
       {
-        Boolean v_eoqEncountered = true;
-        while ((v_isReading = v_buffQueries.read()) != -1)
+        v_concat = "";
+        v_toAddMap = "";
+        while ((v_concat = v_buffQueries.readLine()) != null)
         {
-            switch ((char) v_isReading)
-            {
-              case ';':
-                v_concat = v_concat + (char) v_isReading;
-                v_eoqEncountered = true;
-                break;
-              case '\n':
-                if (v_eoqEncountered)
-                  v_mapQueries.put(v_compteur, v_concat);
-                  v_concat = "";
-                  v_compteur = v_compteur + 1;
-                if (!v_eoqEncountered)
-                  v_concat = v_concat + (char) v_isReading;
-                break;
-              default:
-                v_concat = v_concat + (char) v_isReading;
-                break;
-            }
+          if (v_concat.contains(";"))
+          {
+            v_toAddMap = v_toAddMap + v_concat;
+            v_mapQueries.put(v_compteur, v_toAddMap);
+            v_compteur = v_compteur + 1;
+            v_toAddMap = "";
+          }
+          else
+          {
+            v_toAddMap = v_toAddMap + v_concat;
+          }
         }
       }
       catch (IOException e)
@@ -131,17 +126,30 @@ public class AuditMain
       }
       //Tests.
       v_database = new Database(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_SID"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_TYPE"), v_mapDBConf.get("DB_USER"));
-      //Connection to database.
+
+      //Se connecte à la base.
+      v_database.connectDb();
+      if (v_database.connectionState())
+        System.out.println("Connected to Database.");
+      else
+        System.out.println("Error, not connected to Database.");
+
+      //Parcours et afficher les queries extraites du fichier.
       for(Map.Entry<Integer,String> entry : v_mapQueries.entrySet())
       {
         Integer key = entry.getKey();
         String value = entry.getValue();
         System.out.println(key + " => " + value);
       }
-      System.out.println(v_database.connectionState());
-      v_database.connectDb();
-      System.out.println(v_database.connectionState());
+
+      //Se déconnecte de la base.
       v_database.disconnectDb();
-      System.out.println(v_database.connectionState());
+      if (!v_database.connectionState())
+        System.out.println("Disconnected from Database.");
+      else
+        System.out.println("Error, still connected to Database.");
+
+        String str1 = "select * from dual;";
+      System.out.println(str1.toLowerCase().contains(";"));
     }
 }
