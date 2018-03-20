@@ -22,7 +22,7 @@ public class AuditMain
       Database v_database;
 
       //Parcours et extrait les données du fichier de conf de la DB cible vers un TreeMap.
-      //Paramètres de ce fichier de conf : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_NAME, DB_USER, DB_PASS
+      //Paramètres de ce fichier de conf : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_SID, DB_USER, DB_PASS
       try
       {
         v_buff = new BufferedReader(new FileReader(v_targetDBFile));
@@ -72,11 +72,7 @@ public class AuditMain
         }
       }
       //Tests.
-      v_database = new Database(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_NAME"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_TYPE"), v_mapDBConf.get("DB_USER"));
-      System.out.println(v_database.getIp());
-      System.out.println(v_database.getPort());
-      System.out.println(v_database.getType());
-
+      v_database = new Database(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_SID"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_TYPE"), v_mapDBConf.get("DB_USER"));
       //Connection to database.
       System.out.println(v_database.connectionState());
       v_database.connectDb();
