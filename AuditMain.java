@@ -2,12 +2,13 @@
 import java.io.*;
 import java.util.TreeMap;
 import java.util.Map;
+import java.sql.*;
 
 public class AuditMain
 {
     public static void main(String[] args)
     {
-      //Var for reading the file that contains the database conf (IP, port, user, pas ...).
+      //Variables pour lire le fichier de conf contenant les infos de la DB cible (IP, port, user, pas ...).
       String v_targetDBFilePath           = new String("targetDB.conf");
         File v_targetDBFile               = new File(v_targetDBFilePath);
       BufferedReader v_buff               = null;
@@ -17,11 +18,11 @@ public class AuditMain
         String v_paramMap2                = "";
         String v_concat                   = "";
 
-      //Var for Database connection.
-      Database v_dbToConnect;
+      //Variables pour la connection à la DB cible.
+      Database v_database;
 
-      //Browses and extract data from DB target conf file.
-      //List of params in this file : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_NAME, DB_USER, DB_PASS
+      //Parcours et extrait les données du fichier de conf de la DB cible vers un TreeMap.
+      //Paramètres de ce fichier de conf : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_NAME, DB_USER, DB_PASS
       try
       {
         v_buff = new BufferedReader(new FileReader(v_targetDBFile));
@@ -71,8 +72,16 @@ public class AuditMain
         }
       }
       //Tests.
-      v_dbToConnect = new Database(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_NAME"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_TYPE"), v_mapDBConf.get("DB_USER"));
-      System.out.println(v_dbToConnect.getIp());
-      System.out.println(v_dbToConnect.getPort());
+      v_database = new Database(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_NAME"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_TYPE"), v_mapDBConf.get("DB_USER"));
+      System.out.println(v_database.getIp());
+      System.out.println(v_database.getPort());
+      System.out.println(v_database.getType());
+
+      //Connection to database.
+      System.out.println(v_database.connectionState());
+      v_database.connectDb();
+      System.out.println(v_database.connectionState());
+      v_database.disconnectDb();
+      System.out.println(v_database.connectionState());
     }
 }
