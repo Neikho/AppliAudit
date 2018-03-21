@@ -43,6 +43,7 @@ public class AuditMain
       //Variables pour XML.
       String v_xmlFilePath                  = new String("auditResult.xml");
         File v_xmlFile                      = new File(v_xmlFilePath);
+      Integer v_compteur_2                  = 1;
 
       //Parcours et extrait les données du fichier de conf de la DB cible vers un TreeMap.
       //Paramètres de ce fichier de conf : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_SID, DB_USER, DB_PASS
@@ -162,12 +163,16 @@ public class AuditMain
           String v_query = entry.getValue();
           System.out.println(v_key + " => " + v_query);
 
+          //Création du sous noeud de queries query.
           Element query = doc.createElement("query");
           rootElement.appendChild(query);
-          // setting attribute to element
+          //Attribution d'un attribut id_query à ce sous noeud.
           Attr attr = doc.createAttribute("id_query");
           attr.setValue(String.valueOf(v_key));
           query.setAttributeNode(attr);
+          //Création du sous noeud de query rows.
+          Element rows = doc.createElement("rows");
+          query.appendChild(rows);
 
           //Execute et récupère les colonnes (metadata) de la query en cours récupérée du TreeMap.
           v_resQuery = v_state.executeQuery(v_query);
@@ -182,15 +187,32 @@ public class AuditMain
           //Parcoure les rows de la query en cours.
           while(v_resQuery.next())
           {
+            //Création du sous noeud de rows row et affectation d'un attribut incrémenté id_row.
+            Element row = doc.createElement("row");
+            rows.appendChild(row);
+            Attr attr2 = doc.createAttribute("id_row");
+            attr2.setValue(String.valueOf(v_key)+"."+String.valueOf(v_compteur_2));
+            row.setAttributeNode(attr2);
+
             System.out.println("\nNEW DATA");
             //Récupère la donnée chaque colonne de la row en cours.
             //Parcoure chaque colonne de la row en cours.
             for(int i = 1; i <= v_resQueryData.getColumnCount(); i++)
             {
+              //AJout du sous noed de row colonne et du sous noeud de colonne valeur et ajout du nom de la colonne en cours et sa valeur.
+              Element colonne = doc.createElement("colonne");
+              colonne.appendChild(doc.createTextNode(v_resQueryData.getColumnName(i)));
+              row.appendChild(colonne);
+              Element valeur = doc.createElement("valeur");
+              if (v_resQuery.getString(v_resQueryData.getColumnName(i)) != null)
+                valeur.appendChild(doc.createTextNode(v_resQuery.getString(v_resQueryData.getColumnName(i))));
+              colonne.appendChild(valeur);
               //Affiche sa valeur.
               System.out.println("\t *" + v_resQuery.getString(v_resQueryData.getColumnName(i)));
             }
+            v_compteur_2 = v_compteur_2 + 1;
           }
+          v_compteur_2 = 1;
           System.out.println("\n**********************************");
         }
         //Ecrit le contenu dans le fichier XML.
@@ -223,10 +245,5 @@ public class AuditMain
         System.out.println("Disconnected from Database.");
       else
         System.out.println("Error, still connected to Database.");
-
-
-      //TEST FOR XML FILE OUTPUT
-
-
     }
 }
