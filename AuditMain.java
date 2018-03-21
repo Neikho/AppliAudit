@@ -88,7 +88,6 @@ public class AuditMain
         }
       }
 
-
       //Parcours et extrait les données du fichier des queries vers un TreeMap.
       try
       {
@@ -127,7 +126,7 @@ public class AuditMain
         }
       }
 
-      //Objet de type Databse, permet de se connecter à une base...
+      //Crée un objet de type Database qui permet de se connecter à une base...
       v_database = new Database(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_SID"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_TYPE"), v_mapDBConf.get("DB_USER"));
 
       //Se connecte à la base.
@@ -159,6 +158,7 @@ public class AuditMain
         v_state = v_database.getCon().createStatement();
         for(Map.Entry<Integer,String> entry : v_mapQueries.entrySet())
         {
+          //v_key = query key value, v_query = the query text.
           Integer v_key = entry.getKey();
           String v_query = entry.getValue();
           System.out.println(v_key + " => " + v_query);
@@ -170,6 +170,8 @@ public class AuditMain
           Attr attr = doc.createAttribute("id_query");
           attr.setValue(String.valueOf(v_key));
           query.setAttributeNode(attr);
+          //Ajoute la texte de la requete au noeud query.
+          query.appendChild(doc.createTextNode(v_query));
           //Création du sous noeud de query rows.
           Element rows = doc.createElement("rows");
           query.appendChild(rows);
@@ -193,7 +195,7 @@ public class AuditMain
             //Parcoure chaque colonne de la row en cours.
             for(int i = 1; i <= v_resQueryData.getColumnCount(); i++)
             {
-              //AJout du sous noed de row colonne et du sous noeud de colonne valeur et ajout du nom de la colonne en cours et sa valeur.
+              //AJout du sous noeud de row colonne et du sous noeud de colonne valeur et ajout du nom de la colonne en cours et sa valeur.
               Element colonne = doc.createElement("colonne");
               colonne.appendChild(doc.createTextNode(v_resQueryData.getColumnName(i)));
               row.appendChild(colonne);
@@ -215,8 +217,8 @@ public class AuditMain
         transformer.transform(source, result);
 
         //AFFICHAGE DANS CONSOLE POUR DEBUGGER A SUPPRIMER.
-        StreamResult consoleResult = new StreamResult(System.out);
-        transformer.transform(source, consoleResult);
+        //StreamResult consoleResult = new StreamResult(System.out);
+        //transformer.transform(source, consoleResult);
       }
       catch(SQLException e)
       {
