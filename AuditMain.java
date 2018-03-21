@@ -127,7 +127,7 @@ public class AuditMain
         }
       }
 
-      //Tests.
+      //Objet de type Databse, permet de se connecter à une base...
       v_database = new Database(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_SID"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_TYPE"), v_mapDBConf.get("DB_USER"));
 
       //Se connecte à la base.
@@ -178,12 +178,7 @@ public class AuditMain
           v_resQuery = v_state.executeQuery(v_query);
           v_resQueryData = v_resQuery.getMetaData();
           System.out.println("\n**********************************");
-          System.out.println("\nCOLUMNS");
-          System.out.println("\n**********************************");
-          System.out.println("- Il y a " + v_resQueryData.getColumnCount() + " colonnes dans cette table");
-          System.out.println("\n**********************************");
-          System.out.println("\nDATAS");
-          System.out.println("\n**********************************");
+
           //Parcoure les rows de la query en cours.
           while(v_resQuery.next())
           {
@@ -194,7 +189,6 @@ public class AuditMain
             attr2.setValue(String.valueOf(v_key)+"."+String.valueOf(v_compteur_2));
             row.setAttributeNode(attr2);
 
-            System.out.println("\nNEW DATA");
             //Récupère la donnée chaque colonne de la row en cours.
             //Parcoure chaque colonne de la row en cours.
             for(int i = 1; i <= v_resQueryData.getColumnCount(); i++)
@@ -207,8 +201,6 @@ public class AuditMain
               if (v_resQuery.getString(v_resQueryData.getColumnName(i)) != null)
                 valeur.appendChild(doc.createTextNode(v_resQuery.getString(v_resQueryData.getColumnName(i))));
               colonne.appendChild(valeur);
-              //Affiche sa valeur.
-              System.out.println("\t *" + v_resQuery.getString(v_resQueryData.getColumnName(i)));
             }
             v_compteur_2 = v_compteur_2 + 1;
           }
@@ -222,7 +214,7 @@ public class AuditMain
         StreamResult result = new StreamResult(v_xmlFile);
         transformer.transform(source, result);
 
-        //AFFICHE DANS CONSOLE POUR DEBUGGER.
+        //AFFICHAGE DANS CONSOLE POUR DEBUGGER A SUPPRIMER.
         StreamResult consoleResult = new StreamResult(System.out);
         transformer.transform(source, consoleResult);
       }
