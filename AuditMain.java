@@ -1,9 +1,9 @@
-//PACKAGES.
+//Packages exceptions, sql, treemap.
 import java.io.*;
 import java.util.TreeMap;
 import java.util.Map;
 import java.sql.*;
-
+//XML Packages.
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.Transformer;
