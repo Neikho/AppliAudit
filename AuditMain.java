@@ -1,14 +1,15 @@
-//Packages exceptions, sql, treemap.
+//Importation des packages.
 import java.io.*;
 import java.util.TreeMap;
 import java.util.Map;
 import java.sql.*;
-//XML Packages.
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -163,46 +164,61 @@ public class AuditMain
           String v_query = entry.getValue();
           System.out.println(v_key + " => " + v_query);
 
-          //Création du sous noeud de queries query.
-          Element query = doc.createElement("query");
-          rootElement.appendChild(query);
-          //Attribution d'un attribut id_query à ce sous noeud.
-          Attr attr = doc.createAttribute("id_query");
-          attr.setValue(String.valueOf(v_key));
-          query.setAttributeNode(attr);
-          //Ajoute la texte de la requete au noeud query.
-          query.appendChild(doc.createTextNode(v_query));
-          //Création du sous noeud de query rows.
-          Element rows = doc.createElement("rows");
-          query.appendChild(rows);
-
           //Execute et récupère les colonnes (metadata) de la query en cours récupérée du TreeMap.
           v_resQuery = v_state.executeQuery(v_query);
           v_resQueryData = v_resQuery.getMetaData();
           System.out.println("\n**********************************");
 
+          //Création du sous noeud de racine -> query et affectation d'un attribut incrémenté id_query.
+          Element query = doc.createElement("query");
+          rootElement.appendChild(query);
+          Attr attr2 = doc.createAttribute("id_query");
+          attr2.setValue(String.valueOf(v_key));
+          query.setAttributeNode(attr2);
+          //Check si query ne retourne aucune row, alors on affecte quand même la structure (colonnes) afin de récupérer le squelette pour builder le fichier HTML.
+          if(!v_resQuery.isBeforeFirst())
+          {
+            //Création du sous noeud de query row et affectation d'un attribut incrémenté id_row.
+            Element row = doc.createElement("row");
+            query.appendChild(row);
+            Attr attr3 = doc.createAttribute("id_row");
+            attr3.setValue(String.valueOf(v_key)+"."+String.valueOf(v_compteur_2));
+            row.setAttributeNode(attr3);
+
+            //Récupère chaque colonne de la row en cours, ajout de ces colonnes au fichier XML.
+            for(int i = 1; i <= v_resQueryData.getColumnCount(); i++)
+            {
+              //AJout du sous noeud de row valeur et ajout du nom de la colonne en cours en attribut et sa valeur en valeur.
+              Element valeur = doc.createElement("valeur");
+              row.appendChild(valeur);
+              Attr attr4 = doc.createAttribute("col");
+              attr4.setValue(v_resQueryData.getColumnName(i).toString());
+              valeur.setAttributeNode(attr4);
+            }
+          }
+          //
           //Parcoure les rows de la query en cours.
           while(v_resQuery.next())
           {
-            //Création du sous noeud de rows row et affectation d'un attribut incrémenté id_row.
+            //Création du sous noeud de query row et affectation d'un attribut incrémenté id_row.
             Element row = doc.createElement("row");
-            rows.appendChild(row);
-            Attr attr2 = doc.createAttribute("id_row");
-            attr2.setValue(String.valueOf(v_key)+"."+String.valueOf(v_compteur_2));
-            row.setAttributeNode(attr2);
+            query.appendChild(row);
+            Attr attr3 = doc.createAttribute("id_row");
+            attr3.setValue(String.valueOf(v_key)+"."+String.valueOf(v_compteur_2));
+            row.setAttributeNode(attr3);
 
             //Récupère la donnée chaque colonne de la row en cours.
             //Parcoure chaque colonne de la row en cours.
             for(int i = 1; i <= v_resQueryData.getColumnCount(); i++)
             {
-              //AJout du sous noeud de row colonne et du sous noeud de colonne valeur et ajout du nom de la colonne en cours et sa valeur.
-              Element colonne = doc.createElement("colonne");
-              colonne.appendChild(doc.createTextNode(v_resQueryData.getColumnName(i)));
-              row.appendChild(colonne);
+              //AJout du sous noeud de row valeur et ajout du nom de la colonne en cours en attribut et sa valeur en valeur.
               Element valeur = doc.createElement("valeur");
+              row.appendChild(valeur);
+              Attr attr4 = doc.createAttribute("col");
+              attr4.setValue(v_resQueryData.getColumnName(i).toString());
+              valeur.setAttributeNode(attr4);
               if (v_resQuery.getString(v_resQueryData.getColumnName(i)) != null)
                 valeur.appendChild(doc.createTextNode(v_resQuery.getString(v_resQueryData.getColumnName(i))));
-              colonne.appendChild(valeur);
             }
             v_compteur_2 = v_compteur_2 + 1;
           }
@@ -212,8 +228,11 @@ public class AuditMain
         //Ecrit le contenu dans le fichier XML.
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
+
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(v_xmlFile);
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+	      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
         transformer.transform(source, result);
 
         //AFFICHAGE DANS CONSOLE POUR DEBUGGER A SUPPRIMER.
@@ -239,5 +258,8 @@ public class AuditMain
         System.out.println("Disconnected from Database.");
       else
         System.out.println("Error, still connected to Database.");
+
+      //Appel de HtmlBuilder.
+      HtmlBuilder.main(v_xmlFile);
     }
 }

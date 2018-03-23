@@ -1,3 +1,4 @@
+//Importation des packages.
 import java.sql.*;
 
 public class Database

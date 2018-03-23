@@ -1,1 +1,124 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><queries><query id_query="1">select sid, serial#, username, status, machine, program, process, to_char(logon_time, 'yyyy/mm/dd hh24:mi:ss'), sql_id, to_char(sql_exec_start, 'yyyy/mm/dd hh24:mi:ss'), last_call_et, event from v$session where username is not null order by sid<rows><row id_row="1.1"><colonne>SID<valeur>67</valeur></colonne><colonne>SERIAL#<valeur>18371</valeur></colonne><colonne>USERNAME<valeur>SYSTEM</valeur></colonne><colonne>STATUS<valeur>ACTIVE</valeur></colonne><colonne>MACHINE<valeur>LA4ILINLOGALDB01</valeur></colonne><colonne>PROGRAM<valeur>JDBC Thin Client</valeur></colonne><colonne>PROCESS<valeur>1234</valeur></colonne><colonne>TO_CHAR(LOGON_TIME,'YYYY/MM/DDHH24:MI:SS')<valeur>2018/03/22 09:16:29</valeur></colonne><colonne>SQL_ID<valeur>15tp3cwq98aux</valeur></colonne><colonne>TO_CHAR(SQL_EXEC_START,'YYYY/MM/DDHH24:MI:SS')<valeur>2018/03/22 09:16:29</valeur></colonne><colonne>LAST_CALL_ET<valeur>0</valeur></colonne><colonne>EVENT<valeur>SQL*Net message to client</valeur></colonne></row></rows></query><query id_query="2">select machine, count(*) from v$session group by machine order by machine<rows><row id_row="2.1"><colonne>MACHINE<valeur>LA4ILINLOGALDB01</valeur></colonne><colonne>COUNT(*)<valeur>22</valeur></colonne></row></rows></query><query id_query="3">select 100 * (1-(pr.value/(bg.value + cg.value))) from v$sysstat pr, v$sysstat bg, v$sysstat cg where pr.name='physical reads' and bg.name='db block gets'  and cg.name ='consistent gets'<rows><row id_row="3.1"><colonne>100*(1-(PR.VALUE/(BG.VALUE+CG.VALUE)))<valeur>7.22682244380177042435567451547272589979E01</valeur></colonne></row></rows></query><query id_query="4">select value from v$pgastat where name='cache hit percentage'<rows><row id_row="4.1"><colonne>VALUE<valeur>96.48</valeur></colonne></row></rows></query><query id_query="5">SELECT count(*) FROM v$locked_object l, all_objects t, v$session s WHERE l.object_id=t.object_id and s.sid=l.session_id<rows><row id_row="5.1"><colonne>COUNT(*)<valeur>0</valeur></colonne></row></rows></query><query id_query="6">SELECT s.username, s.machine, s.program, t.owner, t.object_type, t.object_name, l.locked_mode, s.sid, o.ctime FROM v$locked_object l, all_objects t, v$session s, v$lock o WHERE l.object_id=t.object_id and s.sid=l.session_id and o.sid=l.session_id and o.id1=l.object_id order by o.ctime desc<rows/></query><query id_query="7">select sql_id, sql_fulltext, executions, invalidations, parse_calls, buffer_gets, disk_reads, concurrency_wait_time, rows_processed, optimizer_mode, optimizer_cost, parsing_schema_name, module, cpu_time, elapsed_time from v$sqlarea where executions &gt; 0 and parsing_schema_name not in ('SYS', 'SYSTEM', 'SYSMAN', 'WMSYS', 'OUTLN', 'CTXSYS', 'DBSNMP', 'XDB') and last_active_time &gt; (sysdate - (1/(86400/60))) order by elapsed_time desc<rows/></query><query id_query="8">select round(total_size/1024,2) "TOTAL GB", round(system_size/1024,2) "SYSTEM GB", round(system_free/1024,2) "SYSTEM FREE GB", round(temp_size/1024,2) "TEMP GB", round(undo_size/1024,2) "UNDO GB", round(data_size/1024,2) "DATA GB", round(data_free/1024,2) "DATA FREE GB", pct_libre_utile "DATA PCT FREE" from (with cible as (select d.name||'\@'||i.host_name as env_name, to_char(sysdate, 'YYYY/MM/DD') as day from v$database d, v$instance i), ts_info as (select tablespace_name, decode(tablespace_name, 'SYSTEM', 'SYSTEM', 'SYSAUX', 'SYSTEM', contents) as contents_type from dba_tablespaces), ts_size as (select tablespace_name, sum(bytes) as size_b from dba_data_files group by tablespace_name union all select tablespace_name, sum(bytes) as size_b from dba_temp_files group by tablespace_name), ts_free as (select t.tablespace_name, sum(nvl(fs.bytes,0)) as size_b FROM dba_tablespaces t left outer join dba_free_space fs on t.tablespace_name = fs.tablespace_name group by t.tablespace_name), sum_size as (select round(sum(decode(ts_info.contents_type, 'PERMANENT', size_b, 0))/1024/1024,0) as data_size, round(sum(decode(ts_info.contents_type, 'TEMPORARY', size_b, 0))/1024/1024,0) as temp_size, round(sum(decode(ts_info.contents_type, 'UNDO', size_b, 0))/1024/1024,0) as undo_size, round(sum(decode(ts_info.contents_type, 'SYSTEM', size_b, 0))/1024/1024,0) as system_size, round(sum(size_b)/1024/1024,0) as total_size from ts_info natural join ts_size), sum_free as (select round(sum(decode(ts_info.contents_type, 'PERMANENT', size_b, 0))/1024/1024,0) as data_free, round(sum(decode(ts_info.contents_type, 'TEMPORARY', 0, 0))/1024/1024,0) as temp_free, round(sum(decode(ts_info.contents_type, 'UNDO', size_b, 0))/1024/1024,0) as undo_free, round(sum(decode(ts_info.contents_type, 'SYSTEM', size_b, 0))/1024/1024,0) as system_free, round(sum(size_b)/1024/1024,0) as total_free from ts_info natural join ts_free) select cible.env_name, cible.day, data_size, data_free, temp_size, temp_free, undo_size, undo_free, system_size, system_free, total_size, total_free, (system_size + data_size + undo_size + temp_size) as enveloppe_totale, (data_size) as enveloppe_utile, (data_size - data_free) as utilise_utile, (data_free) as libre_utile, round(100*(data_free) / (data_size),0) as pct_libre_utile from cible cross join sum_size cross join sum_free)<rows><row id_row="8.1"><colonne>TOTAL GB<valeur>156.17</valeur></colonne><colonne>SYSTEM GB<valeur>4.38</valeur></colonne><colonne>SYSTEM FREE GB<valeur>.17</valeur></colonne><colonne>TEMP GB<valeur>19.4</valeur></colonne><colonne>UNDO GB<valeur>6</valeur></colonne><colonne>DATA GB<valeur>126.38</valeur></colonne><colonne>DATA FREE GB<valeur>4</valeur></colonne><colonne>DATA PCT FREE<valeur>3</valeur></colonne></row></rows></query><query id_query="9">select * from csav_mdl.combo_chk<rows><row id_row="9.1"><colonne>CC_COMBOCHKID<valeur>Y</valeur></colonne><colonne>CC_LABEL<valeur>Oui</valeur></colonne><colonne>CC_TRANSLATION_01<valeur/></colonne></row><row id_row="9.2"><colonne>CC_COMBOCHKID<valeur>N</valeur></colonne><colonne>CC_LABEL<valeur>Non</valeur></colonne><colonne>CC_TRANSLATION_01<valeur/></colonne></row><row id_row="9.3"><colonne>CC_COMBOCHKID<valeur>D</valeur></colonne><colonne>CC_LABEL<valeur/></colonne><colonne>CC_TRANSLATION_01<valeur/></colonne></row></rows></query><query id_query="10">select 1 from csav_mdl.combo_chk where 1=1<rows><row id_row="10.1"><colonne>1<valeur>1</valeur></colonne></row><row id_row="10.2"><colonne>1<valeur>1</valeur></colonne></row><row id_row="10.3"><colonne>1<valeur>1</valeur></colonne></row></rows></query></queries>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<queries>
+  <query id_query="1">
+    <row id_row="1.1">
+      <valeur col="SID">13</valeur>
+      <valeur col="SERIAL#">7707</valeur>
+      <valeur col="USERNAME">SYSTEM</valeur>
+      <valeur col="STATUS">ACTIVE</valeur>
+      <valeur col="MACHINE">LA4ILINLOGALDB01</valeur>
+      <valeur col="PROGRAM">JDBC Thin Client</valeur>
+      <valeur col="PROCESS">1234</valeur>
+      <valeur col="TO_CHAR(LOGON_TIME,'YYYY/MM/DDHH24:MI:SS')">2018/03/23 16:38:25</valeur>
+      <valeur col="SQL_ID">15tp3cwq98aux</valeur>
+      <valeur col="TO_CHAR(SQL_EXEC_START,'YYYY/MM/DDHH24:MI:SS')">2018/03/23 16:38:25</valeur>
+      <valeur col="LAST_CALL_ET">0</valeur>
+      <valeur col="EVENT">SQL*Net message to client</valeur>
+    </row>
+    <row id_row="1.2">
+      <valeur col="SID">67</valeur>
+      <valeur col="SERIAL#">20555</valeur>
+      <valeur col="USERNAME">CSAV_MDL</valeur>
+      <valeur col="STATUS">INACTIVE</valeur>
+      <valeur col="MACHINE">LTFR-5A14J3B</valeur>
+      <valeur col="PROGRAM">SQL Developer</valeur>
+      <valeur col="PROCESS">10568</valeur>
+      <valeur col="TO_CHAR(LOGON_TIME,'YYYY/MM/DDHH24:MI:SS')">2018/03/23 10:00:45</valeur>
+      <valeur col="SQL_ID"/>
+      <valeur col="TO_CHAR(SQL_EXEC_START,'YYYY/MM/DDHH24:MI:SS')"/>
+      <valeur col="LAST_CALL_ET">16819</valeur>
+      <valeur col="EVENT">SQL*Net message from client</valeur>
+    </row>
+  </query>
+  <query id_query="2">
+    <row id_row="2.1">
+      <valeur col="MACHINE">LA4ILINLOGALDB01</valeur>
+      <valeur col="COUNT(*)">22</valeur>
+    </row>
+    <row id_row="2.2">
+      <valeur col="MACHINE">LTFR-5A14J3B</valeur>
+      <valeur col="COUNT(*)">1</valeur>
+    </row>
+  </query>
+  <query id_query="3">
+    <row id_row="3.1">
+      <valeur col="100*(1-(PR.VALUE/(BG.VALUE+CG.VALUE)))">7.291734137737304814950815619472037571E01</valeur>
+    </row>
+  </query>
+  <query id_query="4">
+    <row id_row="4.1">
+      <valeur col="VALUE">96.53</valeur>
+    </row>
+  </query>
+  <query id_query="5">
+    <row id_row="5.1">
+      <valeur col="COUNT(*)">0</valeur>
+    </row>
+  </query>
+  <query id_query="6">
+    <row id_row="6.1">
+      <valeur col="USERNAME"/>
+      <valeur col="MACHINE"/>
+      <valeur col="PROGRAM"/>
+      <valeur col="OWNER"/>
+      <valeur col="OBJECT_TYPE"/>
+      <valeur col="OBJECT_NAME"/>
+      <valeur col="LOCKED_MODE"/>
+      <valeur col="SID"/>
+      <valeur col="CTIME"/>
+    </row>
+  </query>
+  <query id_query="7">
+    <row id_row="7.1">
+      <valeur col="SQL_ID"/>
+      <valeur col="SQL_FULLTEXT"/>
+      <valeur col="EXECUTIONS"/>
+      <valeur col="INVALIDATIONS"/>
+      <valeur col="PARSE_CALLS"/>
+      <valeur col="BUFFER_GETS"/>
+      <valeur col="DISK_READS"/>
+      <valeur col="CONCURRENCY_WAIT_TIME"/>
+      <valeur col="ROWS_PROCESSED"/>
+      <valeur col="OPTIMIZER_MODE"/>
+      <valeur col="OPTIMIZER_COST"/>
+      <valeur col="PARSING_SCHEMA_NAME"/>
+      <valeur col="MODULE"/>
+      <valeur col="CPU_TIME"/>
+      <valeur col="ELAPSED_TIME"/>
+    </row>
+  </query>
+  <query id_query="8">
+    <row id_row="8.1">
+      <valeur col="TOTAL GB">156.17</valeur>
+      <valeur col="SYSTEM GB">4.39</valeur>
+      <valeur col="SYSTEM FREE GB">.17</valeur>
+      <valeur col="TEMP GB">19.4</valeur>
+      <valeur col="UNDO GB">6</valeur>
+      <valeur col="DATA GB">126.38</valeur>
+      <valeur col="DATA FREE GB">4</valeur>
+      <valeur col="DATA PCT FREE">3</valeur>
+    </row>
+  </query>
+  <query id_query="9">
+    <row id_row="9.1">
+      <valeur col="CC_COMBOCHKID">Y</valeur>
+      <valeur col="CC_LABEL">Oui</valeur>
+      <valeur col="CC_TRANSLATION_01"/>
+    </row>
+    <row id_row="9.2">
+      <valeur col="CC_COMBOCHKID">N</valeur>
+      <valeur col="CC_LABEL">Non</valeur>
+      <valeur col="CC_TRANSLATION_01"/>
+    </row>
+    <row id_row="9.3">
+      <valeur col="CC_COMBOCHKID">D</valeur>
+      <valeur col="CC_LABEL"/>
+      <valeur col="CC_TRANSLATION_01"/>
+    </row>
+  </query>
+  <query id_query="10">
+    <row id_row="10.1">
+      <valeur col="toto">18</valeur>
+    </row>
+  </query>
+</queries>
