@@ -1,4 +1,4 @@
-//Importation des packages.
+//Importation des packages divers.
 import java.io.*;
 import java.util.TreeMap;
 import java.util.Map;

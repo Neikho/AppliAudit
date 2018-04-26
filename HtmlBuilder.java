@@ -1,23 +1,51 @@
-//Importation des packages.
+//Importation des packages divers.
 import java.io.File;
 import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.xml.sax.SAXException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class HtmlBuilder
 {
   public static void main(File p_xmlFile)
   {
+    String v_auditOutputFileName             = new String("auditOutput.html");
+      File v_auditOutputFile                 = new File(v_auditOutputFileName);
+      FileWriter v_auditOutputFileB;
+      String test  = "Zaza";
+      BufferedWriter bw = null;
+
+    //v_auditOutputFile.delete();
+
     try
     {
+      v_auditOutputFile.createNewFile();
+      v_auditOutputFileB = new FileWriter(v_auditOutputFile);
+      bw = new BufferedWriter(v_auditOutputFileB);
+      bw.write("<!DOCTYPE html>"+
+      "\n<html>"+
+      "\n\t<head>"+
+      "\n\t\t<meta charset=\"utf-8\" />"+
+      "\n\t\t<title>Audit ALL4IT</title>"+
+      "\n\t</head>"+
+      "\n\t<body>");
+
       //Parseur et Document.
       final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       final DocumentBuilder builder = factory.newDocumentBuilder();
@@ -54,14 +82,22 @@ public class HtmlBuilder
                 if(n_row_child.item(c).getNodeType() == Node.ELEMENT_NODE)
                 {
                   Element n_valeur = (Element) n_row_child.item(c);
+                  if(n_valeur.getTextContent() == null || n_valeur.getTextContent() == "")
+                  {
+                    System.out.println("-> INDIQUER NO DATA FOUND.\n");
+                  }
                   System.out.println("COLONNE : " + n_valeur.getAttribute("col"));
                   System.out.println("VALEUR : " + n_valeur.getTextContent());
+                  bw.write("\n\t\t<p>"+ n_valeur.getAttribute("col") + n_valeur.getTextContent() + "</p>");
                 }
               }
             }
           }
         }
       }
+      bw.write("\n\t<p>HELLO THERE</p></body>"+
+      "\n</html>");
+      bw.close();
     }
     catch (final ParserConfigurationException e)
     {
