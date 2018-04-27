@@ -15,12 +15,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-
-import java.util.Arrays;
-import java.util.List;
-
 public class HtmlBuilder
 {
   public static void main(File p_xmlFile, Database p_database)

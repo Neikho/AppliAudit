@@ -1,88 +1,51 @@
 //Importation des packages div.
 import java.sql.*;
 
-public class Database
+public abstract class Database
 {
   //Attributs.
-  private String a_dbIp;
-  private String a_dbPort;
-  private String a_dbSid;
-  private String a_dbPass;
-  private String a_dbType;
-  private String a_dbUser;
-  private Connection a_dbCon;
-
-  //Constructeurs.
-  public Database(String p_dbIp, String p_dbPort, String p_dbSid, String p_dbPass, String p_dbType, String p_dbUser)
-  {
-    this.a_dbIp = p_dbIp;
-    this.a_dbPort = p_dbPort;
-    this.a_dbSid = p_dbSid;
-    this.a_dbPass = p_dbPass;
-    this.a_dbType = p_dbType;
-    this.a_dbUser = p_dbUser;
-    this.a_dbCon = null;
-  }
+  protected String a_dbIp;
+  protected String a_dbPort;
+  protected String a_dbSid;
+  protected String a_dbPass;
+  protected String a_dbType;
+  protected String a_dbUser;
+  protected Connection a_dbCon;
 
   //Getters.
-  public String getIp()
+  protected String getIp()
   {
     return this.a_dbIp;
   }
-  public String getPort()
+  protected String getPort()
   {
     return this.a_dbPort;
   }
-  public String getSid()
+  protected String getSid()
   {
     return this.a_dbSid;
   }
-  public String getPass()
+  protected String getPass()
   {
     return this.a_dbPass;
   }
-  public String getType()
+  protected String getType()
   {
     return this.a_dbType;
   }
-  public String getUser()
+  protected String getUser()
   {
     return this.a_dbUser;
   }
-  public Connection getCon()
+  protected Connection getCon()
   {
     return this.a_dbCon;
   }
 
-  //Connecte à la DB.
-  public void connectDb()
-  {
-    String v_urlCon = null;
-    try
-    {
-      if (this.a_dbType.compareToIgnoreCase("oracle") == 0)
-      {
-        Class.forName("oracle.jdbc.driver.OracleDriver");
-        v_urlCon = "jdbc:oracle:thin:@"+this.a_dbIp+":"+this.a_dbPort+":"+this.a_dbSid;
-        this.a_dbCon = DriverManager.getConnection(v_urlCon, this.a_dbUser, this.a_dbPass);
-      }
-      else if (this.a_dbType.compareToIgnoreCase("postgres") == 0)
-      {
-        System.out.println("postgresDb"); //... A continuer ...
-      }
-    }
-    catch(ClassNotFoundException e)
-    {
-      e.printStackTrace();
-    }
-    catch(SQLException e)
-    {
-      e.printStackTrace();
-    }
-  }
+  protected abstract void connectDb();
 
   //Déconnecte de la DB.
-  public void disconnectDb()
+  protected void disconnectDb()
   {
     try
     {
@@ -95,7 +58,7 @@ public class Database
   }
 
   //Récupère le statut de la connection à la DB (connecté/true déconnecté/false).
-  public Boolean connectionState()
+  protected Boolean connectionState()
   {
     Boolean v_dbState = false;
     try

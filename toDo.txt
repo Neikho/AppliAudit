@@ -1,1 +1,1 @@
-Repenser la conception (sous classes oracle pg...);
+Gerer messages d'erreur pour connexion BDD.

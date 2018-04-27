@@ -1,19 +1,6 @@
 //Importation des packages divers.
 import java.io.*;
 import java.util.TreeMap;
-import java.util.Map;
-import java.sql.*;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 public class AuditMain
 {
@@ -37,14 +24,10 @@ public class AuditMain
       //Variables communes pour lire fichier de conf et lire le fichier des queries.
       String v_concat                       = "";
       //Variables pour la connection et execution vers la DB cible.
-      Database v_database;
-      Statement v_state = null;
-      ResultSet v_resQuery;
-      ResultSetMetaData v_resQueryData;
+      Oracle v_database = null;
       //Variables pour XML.
       String v_xmlFilePath                  = new String("auditResult.xml");
         File v_xmlFile                      = new File(v_xmlFilePath);
-      Integer v_compteur_2                  = 1;
 
       //Parcours et extrait les données du fichier de conf de la DB cible vers un TreeMap.
       //Paramètres de ce fichier de conf : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_SID, DB_USER, DB_PASS
@@ -127,8 +110,14 @@ public class AuditMain
         }
       }
 
-      //Crée un objet de type Database qui permet de se connecter à une base...
-      v_database = new Database(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_SID"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_TYPE"), v_mapDBConf.get("DB_USER"));
+      //Check le type de BDD et crée un objet de type Database qui permet de se connecter à une base...
+      if(v_mapDBConf.get("DB_TYPE").equals("oracle"))
+        v_database = new Oracle(v_mapDBConf.get("DB_IP_ADDR"), v_mapDBConf.get("DB_PORT"), v_mapDBConf.get("DB_SID"), v_mapDBConf.get("DB_PASS"), v_mapDBConf.get("DB_USER"));
+      else
+      {
+        System.out.println("Le type de base de données n'est pas reconnu par l'application.");
+        System.exit(0);
+      }
 
       //Se connecte à la base.
       v_database.connectDb();
@@ -137,120 +126,8 @@ public class AuditMain
       else
         System.out.println("Error, not connected to Database.");
 
-      //Parcours et execute les queries extraites du fichier.
-      try
-      {
-        //Créer ou écrase le fichier auditResult.xml
-        if(v_xmlFile.exists())
-        {
-          v_xmlFile.delete();
-          v_xmlFile.createNewFile();
-        }
-        else
-          v_xmlFile.createNewFile();
-        //Variables pour écriture du document XML.
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.newDocument();
-        //Création du noeud racine du doc XML.
-        Element rootElement = doc.createElement("queries");
-        doc.appendChild(rootElement);
-        //Parcoure du TreeMap contenant les queries à executer.
-        v_state = v_database.getCon().createStatement();
-        for(Map.Entry<Integer,String> entry : v_mapQueries.entrySet())
-        {
-          //v_key = query key value, v_query = the query text.
-          Integer v_key = entry.getKey();
-          String v_query = entry.getValue();
-          System.out.println(v_key + " => " + v_query);
-
-          //Execute et récupère les colonnes (metadata) de la query en cours récupérée du TreeMap.
-          v_resQuery = v_state.executeQuery(v_query);
-          v_resQueryData = v_resQuery.getMetaData();
-          System.out.println("\n**********************************");
-
-          //Création du sous noeud de racine -> query et affectation d'un attribut incrémenté id_query.
-          Element query = doc.createElement("query");
-          rootElement.appendChild(query);
-          Attr attr2 = doc.createAttribute("id_query");
-          attr2.setValue(String.valueOf(v_key));
-          query.setAttributeNode(attr2);
-          //Check si query ne retourne aucune row, alors on affecte quand même la structure (colonnes) afin de récupérer le squelette pour builder le fichier HTML.
-          if(!v_resQuery.isBeforeFirst())
-          {
-            //Création du sous noeud de query row et affectation d'un attribut incrémenté id_row.
-            Element row = doc.createElement("row");
-            query.appendChild(row);
-            Attr attr3 = doc.createAttribute("id_row");
-            attr3.setValue(String.valueOf(v_key)+"."+String.valueOf(v_compteur_2));
-            row.setAttributeNode(attr3);
-
-            //Récupère chaque colonne de la row en cours, ajout de ces colonnes au fichier XML.
-            for(int i = 1; i <= v_resQueryData.getColumnCount(); i++)
-            {
-              //AJout du sous noeud de row valeur et ajout du nom de la colonne en cours en attribut et sa valeur en valeur.
-              Element valeur = doc.createElement("valeur");
-              row.appendChild(valeur);
-              Attr attr4 = doc.createAttribute("col");
-              attr4.setValue(v_resQueryData.getColumnName(i).toString());
-              valeur.setAttributeNode(attr4);
-            }
-          }
-          //
-          //Parcoure les rows de la query en cours.
-          while(v_resQuery.next())
-          {
-            //Création du sous noeud de query row et affectation d'un attribut incrémenté id_row.
-            Element row = doc.createElement("row");
-            query.appendChild(row);
-            Attr attr3 = doc.createAttribute("id_row");
-            attr3.setValue(String.valueOf(v_key)+"."+String.valueOf(v_compteur_2));
-            row.setAttributeNode(attr3);
-
-            //Récupère la donnée chaque colonne de la row en cours.
-            //Parcoure chaque colonne de la row en cours.
-            for(int i = 1; i <= v_resQueryData.getColumnCount(); i++)
-            {
-              //AJout du sous noeud de row valeur et ajout du nom de la colonne en cours en attribut et sa valeur en valeur.
-              Element valeur = doc.createElement("valeur");
-              row.appendChild(valeur);
-              Attr attr4 = doc.createAttribute("col");
-              attr4.setValue(v_resQueryData.getColumnName(i).toString());
-              valeur.setAttributeNode(attr4);
-              if (v_resQuery.getString(v_resQueryData.getColumnName(i)) != null)
-                valeur.appendChild(doc.createTextNode(v_resQuery.getString(v_resQueryData.getColumnName(i))));
-            }
-            v_compteur_2 = v_compteur_2 + 1;
-          }
-          v_compteur_2 = 1;
-          System.out.println("\n**********************************");
-        }
-        //Ecrit le contenu dans le fichier XML.
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-
-        DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(v_xmlFile);
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-	      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-        transformer.transform(source, result);
-
-        //AFFICHAGE DANS CONSOLE POUR DEBUGGER A SUPPRIMER.
-        //StreamResult consoleResult = new StreamResult(System.out);
-        //transformer.transform(source, consoleResult);
-      }
-      catch(SQLException e)
-      {
-        e.printStackTrace();
-      }
-      catch(IOException e)
-      {
-        e.printStackTrace();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+      //Appel de XmlBuilder.
+      XmlBuilder.main(v_xmlFile, v_database, v_mapQueries);
 
       //Appel de HtmlBuilder.
       HtmlBuilder.main(v_xmlFile, v_database);
@@ -261,7 +138,5 @@ public class AuditMain
         System.out.println("Disconnected from Database.");
       else
         System.out.println("Error, still connected to Database.");
-
-
     }
 }
