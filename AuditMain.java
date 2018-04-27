@@ -252,6 +252,9 @@ public class AuditMain
          e.printStackTrace();
       }
 
+      //Appel de HtmlBuilder.
+      HtmlBuilder.main(v_xmlFile, v_database);
+
       //Se déconnecte de la base.
       v_database.disconnectDb();
       if (!v_database.connectionState())
@@ -259,7 +262,6 @@ public class AuditMain
       else
         System.out.println("Error, still connected to Database.");
 
-      //Appel de HtmlBuilder.
-      HtmlBuilder.main(v_xmlFile);
+
     }
 }

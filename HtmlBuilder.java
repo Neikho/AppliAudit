@@ -23,18 +23,32 @@ import java.util.List;
 
 public class HtmlBuilder
 {
-  public static void main(File p_xmlFile)
+  public static void main(File p_xmlFile, Database p_database)
   {
     String v_auditOutputFileName             = new String("auditOutput.html");
       File v_auditOutputFile                 = new File(v_auditOutputFileName);
       FileWriter v_auditOutputFileB;
-      String test  = "Zaza";
       BufferedWriter bw = null;
+      Sommaire v_sommaire = new Sommaire();
 
-    //v_auditOutputFile.delete();
+    v_sommaire.addTitle("INTRODUCTION");
+    v_sommaire.addTitle("GO");
+    v_sommaire.addSubTitle("GOB");
+    v_sommaire.addSubTitle("GOBGG");
+    v_sommaire.addSubSubTitle("GOBGGJJKL");
+    v_sommaire.addSubSubTitle("GOBGGJJKDsfsdfsdfL");
+    v_sommaire.addTitle("GO");
+    v_sommaire.addSubTitle("GOB");
+    v_sommaire.addSubTitle("GOBGG");
+    v_sommaire.addSubSubTitle("GOBGGJJKL");
+    System.out.println(v_sommaire.getFullSommaire());
+
+      //for test
+      System.out.println(p_database.getIp());
 
     try
     {
+      //Ecrit en tete HTML dans le fichier.
       v_auditOutputFile.createNewFile();
       v_auditOutputFileB = new FileWriter(v_auditOutputFile);
       bw = new BufferedWriter(v_auditOutputFileB);
@@ -82,12 +96,11 @@ public class HtmlBuilder
                 if(n_row_child.item(c).getNodeType() == Node.ELEMENT_NODE)
                 {
                   Element n_valeur = (Element) n_row_child.item(c);
-                  if(n_valeur.getTextContent() == null || n_valeur.getTextContent() == "")
-                  {
-                    System.out.println("-> INDIQUER NO DATA FOUND.\n");
-                  }
                   System.out.println("COLONNE : " + n_valeur.getAttribute("col"));
-                  System.out.println("VALEUR : " + n_valeur.getTextContent());
+                  if(n_valeur.getTextContent() == null || n_valeur.getTextContent() == "")
+                    System.out.println("VALEUR : NULL\n");
+                  else
+                    System.out.println("VALEUR : " + n_valeur.getTextContent());
                   bw.write("\n\t\t<p>"+ n_valeur.getAttribute("col") + n_valeur.getTextContent() + "</p>");
                 }
               }
@@ -95,7 +108,8 @@ public class HtmlBuilder
           }
         }
       }
-      bw.write("\n\t<p>HELLO THERE</p></body>"+
+      bw.write("\n\t\t"+v_sommaire.getFullSommaire());
+      bw.write("\n\t</body>"+
       "\n</html>");
       bw.close();
     }
