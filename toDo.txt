@@ -1,1 +1,3 @@
-Gerer messages d'erreur pour connexion BDD.
+trier / classer les fichiers (bin src)...
+1 classe = 1 tache (classe execQuery)
+xml row id enlever le prefixe
