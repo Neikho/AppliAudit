@@ -1,3 +1,1 @@
-trier / classer les fichiers (bin src)...
-1 classe = 1 tache (classe execQuery)
-xml row id enlever le prefixe
+check si une seule valeur alors pas de tableau
