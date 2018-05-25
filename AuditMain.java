@@ -18,7 +18,6 @@ public class AuditMain
       //Variables pour lire le fichier des queries à executer.
         TreeMap<Integer, String> v_mapQueries = new TreeMap<>();
       //Variables pour la connection et execution vers la DB cible.
-      //Oracle v_database = null;
       Object v_database = null;
 
       //Recupère la conf de la DB cible et les queries.
