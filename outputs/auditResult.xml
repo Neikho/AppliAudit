@@ -22,4 +22,97 @@
       <valeur col="CC_TRANSLATION_01"/>
     </row>
   </query>
+  <query id_query="3">
+    <row id_row="3.1">
+      <valeur col="SQL_ID"/>
+      <valeur col="SQL_FULLTEXT"/>
+      <valeur col="EXECUTIONS"/>
+      <valeur col="INVALIDATIONS"/>
+      <valeur col="PARSE_CALLS"/>
+      <valeur col="BUFFER_GETS"/>
+      <valeur col="DISK_READS"/>
+      <valeur col="CONCURRENCY_WAIT_TIME"/>
+      <valeur col="ROWS_PROCESSED"/>
+      <valeur col="OPTIMIZER_MODE"/>
+      <valeur col="OPTIMIZER_COST"/>
+      <valeur col="PARSING_SCHEMA_NAME"/>
+      <valeur col="MODULE"/>
+      <valeur col="CPU_TIME"/>
+      <valeur col="ELAPSED_TIME"/>
+    </row>
+  </query>
+  <query id_query="4">
+    <row id_row="4.1">
+      <valeur col="CC_LABEL">Oui</valeur>
+    </row>
+    <row id_row="4.2">
+      <valeur col="CC_LABEL">Non</valeur>
+    </row>
+    <row id_row="4.3">
+      <valeur col="CC_LABEL"/>
+    </row>
+  </query>
+  <query id_query="5">
+    <row id_row="5.1">
+      <valeur col="TOTAL GB">156.58</valeur>
+      <valeur col="SYSTEM GB">4.8</valeur>
+      <valeur col="SYSTEM FREE GB">.19</valeur>
+      <valeur col="TEMP GB">19.4</valeur>
+      <valeur col="UNDO GB">6</valeur>
+      <valeur col="DATA GB">126.38</valeur>
+      <valeur col="DATA FREE GB">2.3</valeur>
+      <valeur col="DATA PCT FREE">2</valeur>
+    </row>
+  </query>
+  <query id_query="7">
+    <row id_row="7.1">
+      <valeur col="ID_BANQUE">2</valeur>
+      <valeur col="CODE_BANQUE">00021</valeur>
+      <valeur col="NOM">CSAV TOURS</valeur>
+      <valeur col="NOM_INTER"/>
+      <valeur col="ADRESSE_1">22 RUE DES FRERES LUMIERE</valeur>
+      <valeur col="ADRESSE_2"/>
+      <valeur col="CODE_POSTAL">37170</valeur>
+      <valeur col="VILLE">CHAMBRAY LES TOURS</valeur>
+      <valeur col="ID_PAYS">2</valeur>
+    </row>
+    <row id_row="7.2">
+      <valeur col="ID_BANQUE">-999</valeur>
+      <valeur col="CODE_BANQUE"/>
+      <valeur col="NOM"/>
+      <valeur col="NOM_INTER"/>
+      <valeur col="ADRESSE_1"/>
+      <valeur col="ADRESSE_2"/>
+      <valeur col="CODE_POSTAL"/>
+      <valeur col="VILLE"/>
+      <valeur col="ID_PAYS"/>
+    </row>
+    <row id_row="7.3">
+      <valeur col="ID_BANQUE">3</valeur>
+      <valeur col="CODE_BANQUE">00122</valeur>
+      <valeur col="NOM">CSAV BORDEAUX</valeur>
+      <valeur col="NOM_INTER"/>
+      <valeur col="ADRESSE_1">2 CHEMIN DE LA GRANGE</valeur>
+      <valeur col="ADRESSE_2"/>
+      <valeur col="CODE_POSTAL">33650</valeur>
+      <valeur col="VILLE">MARTILLAC</valeur>
+      <valeur col="ID_PAYS">2</valeur>
+    </row>
+    <row id_row="7.4">
+      <valeur col="ID_BANQUE">4</valeur>
+      <valeur col="CODE_BANQUE">00039</valeur>
+      <valeur col="NOM">CSAV TOULOUSE</valeur>
+      <valeur col="NOM_INTER"/>
+      <valeur col="ADRESSE_1">4 RUE MAURICE CAUNES</valeur>
+      <valeur col="ADRESSE_2"/>
+      <valeur col="CODE_POSTAL">31200</valeur>
+      <valeur col="VILLE">TOULOUSE</valeur>
+      <valeur col="ID_PAYS">2</valeur>
+    </row>
+  </query>
+  <query id_query="9">
+    <row id_row="9.1">
+      <valeur col="1">1</valeur>
+    </row>
+  </query>
 </queries>

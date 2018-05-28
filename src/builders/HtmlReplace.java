@@ -51,7 +51,6 @@ public class HtmlReplace
 
       try (BufferedWriter bw = new BufferedWriter(new FileWriter("./outputs/definitiveHtml.html")))
       {
-        String content = "This is the content to write into file\n";
         bw.write(_newFile);
         System.out.println("Done");
       }
@@ -86,54 +85,61 @@ public class HtmlReplace
     String _thead = new String("<thead><tr>");
     String _tbody = new String("<tbody>");
     boolean _needAddHEad = true;
+    int _nbRow = 0;
+    int _nbCell = 0;
+    String _retIfSoloValue = "";
     //Parseur et Document.
     try
-  {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    Document document = builder.parse("./outputs/auditResult.xml");
-    Element n_row = null;
-
-    //Récupère le noeud racine du document XML (queries).
-    Node _rootNode = document.getDocumentElement();
-    //Récupère la liste des noeuds enfants (query) du noeud racine (queries).
-    NodeList _rootChildNodes = _rootNode.getChildNodes();
-
-    for(int i = 0; i < _rootChildNodes.getLength(); i++)
     {
-      if(_rootChildNodes.item(i).getNodeType() == Node.ELEMENT_NODE)
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      Document document = builder.parse("./outputs/auditResult.xml");
+      Element n_row = null;
+
+      //Récupère le noeud racine du document XML (queries).
+      Node _rootNode = document.getDocumentElement();
+      //Récupère la liste des noeuds enfants (query) du noeud racine (queries).
+      NodeList _rootChildNodes = _rootNode.getChildNodes();
+
+      for(int i = 0; i < _rootChildNodes.getLength(); i++)
       {
-        Element _queryNode = (Element) _rootChildNodes.item(i);
-        if(_queryNode.getAttribute("id_query").equals(idQuery))
+        if(_rootChildNodes.item(i).getNodeType() == Node.ELEMENT_NODE)
         {
-          NodeList _queryChildNodes = _rootChildNodes.item(i).getChildNodes();
-          for(int j = 0; j < _queryChildNodes.getLength(); j++)
+          Element _queryNode = (Element) _rootChildNodes.item(i);
+          if(_queryNode.getAttribute("id_query").equals(idQuery))
           {
-            if(_queryChildNodes.item(j).getNodeType() == Node.ELEMENT_NODE)
+            _nbRow = 0;
+            NodeList _queryChildNodes = _rootChildNodes.item(i).getChildNodes();
+            for(int j = 0; j < _queryChildNodes.getLength(); j++)
             {
-              System.out.println("HERE");
-              _tbody = _tbody + "<tr>";
-              NodeList _rowQueryChildNodes = _queryChildNodes.item(j).getChildNodes();
-              for(int k = 0; k < _rowQueryChildNodes.getLength(); k++)
+              if(_queryChildNodes.item(j).getNodeType() == Node.ELEMENT_NODE)
               {
-                if(_rowQueryChildNodes.item(k).getNodeType() == Node.ELEMENT_NODE)
+                _nbCell = 0;
+                _nbRow ++;
+                _tbody = _tbody + "<tr>";
+                NodeList _rowQueryChildNodes = _queryChildNodes.item(j).getChildNodes();
+                for(int k = 0; k < _rowQueryChildNodes.getLength(); k++)
                 {
-                  Element _valeurRowQuery = (Element) _rowQueryChildNodes.item(k);
-                  System.out.println(_valeurRowQuery.getAttribute("col") + " /// " + _valeurRowQuery.getTextContent());
-                  if(_needAddHEad)
+                  if(_rowQueryChildNodes.item(k).getNodeType() == Node.ELEMENT_NODE)
                   {
-                    _thead = _thead + "<th>" + _valeurRowQuery.getAttribute("col") + "</th>";
+                    _nbCell ++;
+                    Element _valeurRowQuery = (Element) _rowQueryChildNodes.item(k);
+                    System.out.println(_valeurRowQuery.getAttribute("col") + " /// " + _valeurRowQuery.getTextContent());
+                    if(_needAddHEad)
+                    {
+                      _thead = _thead + "<th>" + _valeurRowQuery.getAttribute("col") + "</th>";
+                    }
+                    _tbody = _tbody + "<td>" + _valeurRowQuery.getTextContent() + "</td>";
+                    _retIfSoloValue = _valeurRowQuery.getTextContent();
                   }
-                  _tbody = _tbody + "<td>" + _valeurRowQuery.getTextContent() + "</td>";
                 }
+                _needAddHEad = false;
+                _tbody = _tbody + "</tr>";
               }
-              _needAddHEad = false;
-              _tbody = _tbody + "</tr>";
             }
           }
         }
       }
-    }
   }
   catch (final ParserConfigurationException e)
   {
@@ -147,9 +153,20 @@ public class HtmlReplace
   {
       e.printStackTrace();
   }
-  _thead = _thead + "</tr></thead>";
-  _tbody = _tbody + "</tbody>";
-  _htmlTab = _htmlTab + _thead + _tbody + "</table>";
+  System.out.println("NBROW : " + _nbRow + " NBCELL : " + _nbCell);
+
+  if(_nbRow == 1 && _nbCell == 1)
+  {
+    //_htmlTab =  retourner la valeur seule.
+    System.out.println("SOLOSLOSLSOLOOOOOOOOOOOOOOOOOOO");
+    _htmlTab = _retIfSoloValue;
+  }
+  else
+  {
+    _thead = _thead + "</tr></thead>";
+    _tbody = _tbody + "</tbody>";
+    _htmlTab = _htmlTab + _thead + _tbody + "</table>";
+  }
   return _htmlTab;
   }
 }

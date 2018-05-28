@@ -4,6 +4,8 @@ package src.readers;
 import java.io.*;
 import java.util.TreeMap;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConfReader
 {
@@ -81,11 +83,12 @@ public class ConfReader
     //Variables pour lire le fichier des queries à executer.
     BufferedReader v_buffQueries          = null;
     TreeMap<Integer, String> v_mapQueries = new TreeMap<>();
-      Integer v_compteur                  = 1;
+      Integer v_compteur                  = 0;
       String v_toAddMap                   = "";
     String v_concat                       = "";
     String v_targetQueriesFilePath        = new String("./conf/queriesToExec.sql");
     File v_targetQueriesFile              = new File(v_targetQueriesFilePath);
+    Pattern p = Pattern.compile("\\#\\[Q([0-9]+)\\]");   // the pattern to search for
 
     //Parcours et extrait les données du fichier des queries vers un TreeMap.
     try
@@ -96,11 +99,18 @@ public class ConfReader
       while ((v_concat = v_buffQueries.readLine()) != null)
       {
         v_toAddMap = v_toAddMap + v_concat;
+        Matcher m = p.matcher(v_concat);
+        if(m.find())
+        {
+          System.out.println(m.group(1));
+          v_toAddMap = v_toAddMap.replaceAll("\\#\\[Q[0-9]+\\]", "");
+          v_compteur  = Integer.parseInt(m.group(1));
+          System.out.println(v_toAddMap + " COMPTEUR : " + v_compteur);
+        }
         if (v_concat.contains(";"))
         {
           v_toAddMap = v_toAddMap.replace(";", "");
           v_mapQueries.put(v_compteur, v_toAddMap);
-          v_compteur = v_compteur + 1;
           v_toAddMap = "";
         }
       }

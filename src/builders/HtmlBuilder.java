@@ -42,19 +42,28 @@ public class HtmlBuilder
       "\n\t<head>"+
       "\n\t\t<meta charset=\"utf-8\" />"+
       "\n\t\t<title>Audit ALL4IT</title>"+
-      "\n\t\t<style type = \"text/css\"> .page{margin: auto; height: 29.7cm; width: 21cm; border: 2px solid red; color: red;}</style>"+
+      "\n\t\t<style type = \"text/css\"> .page{margin: auto;} td{border-right: 0.3px solid white; padding-right: 3px;} table{text-align: right; background-color: black; color: white; font-size: 10px; border-spacing: 5px;} th{border-bottom: 0.3px solid white;}</style>"+
+      //
+      //"table{font-size: 10px; border-spacing: 1px; border-left: 0.5px solid black; border-left-style: dashed; border-bottom: 0.5px solid black;
+      //border-bottom-style: dashed;} td, th{border-right: 0.5px solid black; border-right-style: dashed;} th{border-bottom: 0.5px solid black; border-bottom-style: dashed; border-top: 0.5px solid black; border-top-style: dashed;}</style>"+
       "\n\t</head>"+
       "\n\t<body>"+
-
+      "<section class =\"page\" id = \"homepage\">"+
+      "\n\t\t\t\t<img src=\"imgs/2018-01-05.png\" style=\"padding-left: 18cm; padding-top: 0.6cm; width: 5%; height: auto;\"><br/>"+
+      "\n\t\t\tAudit de la base ${torep_1}<br/>"+
+      "<p>Auteur : XXXXX XXXXXXXXX</p>"+
+      "<p>Date : XXXXX XXXXXXXXX</p>"+
+      "<p>Version : XXXXX XXXXXXXXX</p>"+
+      "<p>Diffusion : XXXXX XXXXXXXXX</p>"+
+      "</section>"+
       "\n\t\t<section class=\"page\">"+
-      "\n\t\t\t\t<img src=\"imgs/2018-01-05.png\" style=\"padding-left: 18cm; padding-top: 0.6cm; width: 10%; height: auto;\">"+
-      "\n\t\t\t<p style=\"padding-top: 10cm;\">Audit de la base ${torep_1}</p>"+
-      "<p style=\"padding-top: 10cm;\">Table COMBO_CHK ${torep_2}</p>"+
-      "\n\t\t</section>"+
-      "\n\t\t<br style=\"page-break-before: always;\">"+
-      "\n\t\t<div class=\"page\">"+
-      "\n\t\t\t<h1>HIUGIUGIUGUI</h1>"+
-      "\n\t\t</div>");
+
+      "<p>Table COMBO_CHK ${torep_2}</p>"+
+      //"\n\t\t<br style=\"page-break-before: always;\">"+
+      "\n\t\t\t<p>Deuxieme select combo ${torep_7}</p>"+
+      "\n\t\t\t<p>Volume global de la database ${torep_5}</p>"+
+      "\n\t\t\t<p>Requetes couteuses ${torep_3}</p>"+
+      "\n\t\t</section>");
 
       bw.write("\n\t</body>"+
       "\n</html>");
