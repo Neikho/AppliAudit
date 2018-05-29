@@ -41,8 +41,12 @@ public class HtmlReplace
           int idToRep = Integer.parseInt(m.group(1));
           System.out.println(m.group(1));
           String _htmlTab = getValuesFromId(m.group(1));
-          System.out.println(_htmlTab);
+
           String _toRep = "\\$\\{torep\\_"+ idToRep +"\\}";
+
+          //_htmlTab = _htmlTab.replaceAll("\\$", "\\\\\\$");
+          _htmlTab = _htmlTab.replaceAll("\\$", "\\\\\\$");
+          System.out.println(_htmlTab);
           sCurrentLine = sCurrentLine.replaceAll(_toRep, _htmlTab);
           System.out.println(sCurrentLine);
         }
@@ -124,7 +128,7 @@ public class HtmlReplace
                   {
                     _nbCell ++;
                     Element _valeurRowQuery = (Element) _rowQueryChildNodes.item(k);
-                    System.out.println(_valeurRowQuery.getAttribute("col") + " /// " + _valeurRowQuery.getTextContent());
+                    //System.out.println(_valeurRowQuery.getAttribute("col") + " /// " + _valeurRowQuery.getTextContent());
                     if(_needAddHEad)
                     {
                       _thead = _thead + "<th>" + _valeurRowQuery.getAttribute("col") + "</th>";
@@ -167,6 +171,7 @@ public class HtmlReplace
     _tbody = _tbody + "</tbody>";
     _htmlTab = _htmlTab + _thead + _tbody + "</table>";
   }
+  System.out.println("BYYYYYYYYYYYYYYYYYYE");
   return _htmlTab;
   }
 }

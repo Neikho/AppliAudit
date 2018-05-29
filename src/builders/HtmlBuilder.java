@@ -38,35 +38,33 @@ public class HtmlBuilder
       v_auditOutputFileB = new FileWriter(v_auditOutputFile);
       bw = new BufferedWriter(v_auditOutputFileB);
       bw.write("<!DOCTYPE html>"+
-      "\n<html>"+
-      "\n\t<head>"+
-      "\n\t\t<meta charset=\"utf-8\" />"+
-      "\n\t\t<title>Audit ALL4IT</title>"+
-      "\n\t\t<style type = \"text/css\"> .page{margin: auto;} td{border-right: 0.3px solid white; padding-right: 3px;} table{text-align: right; background-color: black; color: white; font-size: 10px; border-spacing: 5px;} th{border-bottom: 0.3px solid white;}</style>"+
-      //
-      //"table{font-size: 10px; border-spacing: 1px; border-left: 0.5px solid black; border-left-style: dashed; border-bottom: 0.5px solid black;
-      //border-bottom-style: dashed;} td, th{border-right: 0.5px solid black; border-right-style: dashed;} th{border-bottom: 0.5px solid black; border-bottom-style: dashed; border-top: 0.5px solid black; border-top-style: dashed;}</style>"+
-      "\n\t</head>"+
-      "\n\t<body>"+
-      "<section class =\"page\" id = \"homepage\">"+
-      "\n\t\t\t\t<img src=\"imgs/2018-01-05.png\" style=\"padding-left: 18cm; padding-top: 0.6cm; width: 5%; height: auto;\"><br/>"+
-      "\n\t\t\tAudit de la base ${torep_1}<br/>"+
-      "<p>Auteur : XXXXX XXXXXXXXX</p>"+
-      "<p>Date : XXXXX XXXXXXXXX</p>"+
-      "<p>Version : XXXXX XXXXXXXXX</p>"+
-      "<p>Diffusion : XXXXX XXXXXXXXX</p>"+
-      "</section>"+
-      "\n\t\t<section class=\"page\">"+
-
-      "<p>Table COMBO_CHK ${torep_2}</p>"+
+      "<html>"+
+        "<head>"+
+          "<meta charset=\"utf-8\" />"+
+          "<title>Audit ALL4IT</title>"+
+          "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/style.css\">"+
+        "</head>"+
+        "<body>"+
+          "<section class =\"page\" id = \"homepage\">"+
+            "<img src=\"imgs/2018-01-05.png\" id=\"logoA4i\"><br/>"+
+            "Audit de la base ${torep_1}<br/>"+
+            "<p>Auteur : XXXXX XXXXXXXXX</p>"+
+            "<p>Date : XXXXX XXXXXXXXX</p>"+
+            "<p>Version : XXXXX XXXXXXXXX</p>"+
+            "<p>Diffusion : XXXXX XXXXXXXXX</p>"+
+          "</section>"+
+          "<section class=\"page\">"+
       //"\n\t\t<br style=\"page-break-before: always;\">"+
-      "\n\t\t\t<p>Deuxieme select combo ${torep_7}</p>"+
-      "\n\t\t\t<p>Volume global de la database ${torep_5}</p>"+
-      "\n\t\t\t<p>Requetes couteuses ${torep_3}</p>"+
-      "\n\t\t</section>");
-
-      bw.write("\n\t</body>"+
-      "\n</html>");
+            "<p>Volume global de la database ${torep_2}</p>"+
+            "<p>Infos générales sur les sessions ${torep_3}</p>"+
+            "<p>Nombre de sessions par machine ${torep_4}</p>"+
+            "<p>Cache hit ratio ${torep_5}</p>"+
+            "<p>Hit ratio de la PGA ${torep_6}</p>"+
+            "<p>Nombre de locks ${torep_7}</p>"+
+            "<p>Objets lockes ${torep_8}</p>"+
+            "</section>"+
+        "</body>"+
+      "</html>");
       bw.close();
       HtmlReplace.main(v_auditOutputFileName);
     }

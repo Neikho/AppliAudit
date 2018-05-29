@@ -57,7 +57,6 @@ public class AuditMain
           System.out.println("Disconnected from Database.");
         else
           System.out.println("Error, still connected to Database.");
-
       } catch (SecurityException e)
       {
           e.printStackTrace();

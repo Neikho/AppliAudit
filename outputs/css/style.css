@@ -1,0 +1,46 @@
+/*balises*/
+*
+{
+  font-size: 20px;
+}
+
+/*table
+{
+  text-align: right;
+  background-color: white;
+  color: black;
+  border: 0.3px solid black;
+  border-collapse: collapse;
+  width: 200px;
+  table-layout: fixed;
+}
+td
+{
+  border: 0.3px solid black;
+  padding-right: 3px;
+  width: 30px;
+  overflow: hidden;
+}
+th
+{
+  text-align: center;
+  border: 0.3px solid black;
+}*/
+td, th { width: 30px; overflow: hidden; }
+   table { width : 90px; table-layout: fixed; }
+
+/*classe*/
+.page
+{
+  margin: auto;
+  border: 2px solid red;
+}
+
+/*ids*/
+#logoA4i
+{
+  padding-left: 18cm;
+  padding-top: 0.6cm;
+  width: 10%;
+  height: auto;
+}
