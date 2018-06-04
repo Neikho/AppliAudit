@@ -24,6 +24,8 @@ public class AuditMain
       v_mapDBConf = ConfReader.getConf();
       v_mapQueries = ConfReader.getQueries();
 
+      System.out.println(v_mapDBConf.get("DB_CLIENT"));
+
       //instanciation dynamique en fonction du sgbd.
       try
       {
@@ -48,7 +50,7 @@ public class AuditMain
         XmlBuilder.main((Database) v_database, v_mapQueries);
 
         //Appel de HtmlBuilder.
-        HtmlBuilder.main((Database) v_database);
+        HtmlBuilder.main((Database) v_database, v_mapDBConf.get("DB_CLIENT"), v_mapDBConf.get("AUDIT_AUTHOR"));
 
         //Se déconnecte de la base.
         methodDisc.invoke(v_database);

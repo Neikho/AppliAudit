@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.time.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,7 +21,7 @@ import org.w3c.dom.NodeList;
 
 public class HtmlBuilder
 {
-  public static void main(Database p_database)
+  public static void main(Database p_database, String p_client, String p_author)
   {
     String v_xmlFilePath                    = new String("./outputs/auditResult.xml");
       File v_xmlFile                        = new File(v_xmlFilePath);
@@ -46,27 +47,30 @@ public class HtmlBuilder
         "</head>"+
         "<body>"+
           "<section class =\"page\" id = \"homepage\">"+
-            "<img src=\"imgs/2018-01-05.png\" id=\"logoA4i\"><br/>"+
-            "Audit de la base ${torep_1}<br/>"+
-            "<p>Auteur : XXXXX XXXXXXXXX</p>"+
-            "<p>Date : XXXXX XXXXXXXXX</p>"+
-            "<p>Version : XXXXX XXXXXXXXX</p>"+
-            "<p>Diffusion : XXXXX XXXXXXXXX</p>"+
+            "<span id = \"auditTitle\">Audit de la base ${torep_1}</span><br/>"+
+            "<p>Auteur : "+p_author+"</p>"+
+            "<p>Date : "+java.time.LocalDate.now()+"</p>"+
+            "<p>Version : 1.0</p>"+
+            "<p>Diffusion : "+p_client+"</p><br/><br/<br/><br/>"+
+            "Avertissement : <br/><p style=\"color: red;\">Ce document ne peut être reproduit ou diffusé sans autorisation préalable d’ALL4IT Ce document contient des informations confidentielles relatives au client  Ces informations ne doivent être utilisées que dans le cadre du projet en cours et doivent être considérées comme confidentielles.</p>"+
           "</section>"+
           "<section class=\"page\">"+
-      //"\n\t\t<br style=\"page-break-before: always;\">"+
-            "<p>Volume global de la database ${torep_2}</p>"+
-            "<p>Infos générales sur les sessions ${torep_3}</p>"+
-            "<p>Nombre de sessions par machine ${torep_4}</p>"+
-            "<p>Cache hit ratio ${torep_5}</p>"+
-            "<p>Hit ratio de la PGA ${torep_6}</p>"+
-            "<p>Nombre de locks ${torep_7}</p>"+
-            "<p>Objets lockes ${torep_8}</p>"+
+              "<div class=\"nobreak\">Volume global de la database ${torep_2}</div>"+
+              "<div class=\"nobreak\">Infos générales sur les sessions ${torep_3}</div>"+
+              "<div class=\"nobreak\">Nombre de sessions par machine ${torep_4}</div>"+
+              "<div class=\"nobreak\">Cache hit ratio ${torep_5}</div>"+
+              "<div class=\"nobreak\">Hit ratio de la PGA ${torep_6}</div>"+
+              "<div class=\"nobreak\">Nombre de locks ${torep_7}</div>"+
+              "<div class=\"nobreak\">Objets lockes ${torep_8}</div>"+
+              "<div class=\"nobreak\">Contenu table combo_chk ${torep_9}</div>"+
+              "<div class=\"nobreak\">Contenu table banques ${torep_10}</div>"+
             "</section>"+
         "</body>"+
       "</html>");
       bw.close();
       HtmlReplace.main(v_auditOutputFileName);
+      System.out.println("jijihh : " + p_client);
+      System.out.println("jijihh : " + p_author);
     }
     catch (final IOException e)
     {
