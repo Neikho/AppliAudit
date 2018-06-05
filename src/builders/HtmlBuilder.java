@@ -29,12 +29,9 @@ public class HtmlBuilder
       File v_auditOutputFile                 = new File(v_auditOutputFileName);
       FileWriter v_auditOutputFileB;
       BufferedWriter bw = null;
-      //for test
-      System.out.println(p_database.getIp());
-      System.out.println(v_auditOutputFile.getPath() + v_auditOutputFile.getPath());
     try
     {
-      //Ecrit en tete HTML dans le fichier.
+      //Writes html file.
       v_auditOutputFile.createNewFile();
       v_auditOutputFileB = new FileWriter(v_auditOutputFile);
       bw = new BufferedWriter(v_auditOutputFileB);
@@ -47,12 +44,13 @@ public class HtmlBuilder
         "</head>"+
         "<body>"+
           "<section class =\"page\" id = \"homepage\">"+
-            "<span id = \"auditTitle\">Audit de la base ${torep_1}</span><br/>"+
-            "<p>Auteur : "+p_author+"</p>"+
+            "<img src=\"imgs/"+p_client+".png\" id=\"logoClient\">"+
+            "<p id = \"auditTitle\">Audit de la base ${torep_1}</p>"+
+            "<br/><br/><br/><br/><br/><br/><p>Auteur : "+p_author+"</p>"+
             "<p>Date : "+java.time.LocalDate.now()+"</p>"+
             "<p>Version : 1.0</p>"+
             "<p>Diffusion : "+p_client+"</p><br/><br/<br/><br/>"+
-            "Avertissement : <br/><p style=\"color: red;\">Ce document ne peut être reproduit ou diffusé sans autorisation préalable d’ALL4IT Ce document contient des informations confidentielles relatives au client  Ces informations ne doivent être utilisées que dans le cadre du projet en cours et doivent être considérées comme confidentielles.</p>"+
+            "<p>Avertissement : </p><p style=\"color: red;\">Ce document ne peut être reproduit ou diffusé sans autorisation préalable d’ALL4IT Ce document contient des informations confidentielles relatives au client  Ces informations ne doivent être utilisées que dans le cadre du projet en cours et doivent être considérées comme confidentielles.</p>"+
           "</section>"+
           "<section class=\"page\">"+
               "<div class=\"nobreak\">Volume global de la database ${torep_2}</div>"+
@@ -69,8 +67,6 @@ public class HtmlBuilder
       "</html>");
       bw.close();
       HtmlReplace.main(v_auditOutputFileName);
-      System.out.println("jijihh : " + p_client);
-      System.out.println("jijihh : " + p_author);
     }
     catch (final IOException e)
     {

@@ -6,7 +6,7 @@ use warnings;
 
 #Importe dans ce répertoire les sources à jour.
 print("Cleaning...");
-system "rm ./*.class src/*/*.class outputs/auditOutput.html outputs/auditResult.xml outputs/definitiveHtml.html outputs/toto.pdf";
+system "rm ./*.class src/*/*.class outputs/auditOutput.html outputs/auditResult.xml outputs/definitiveHtml.html outputs/*.pdf";
 print("\nCompiling java src...");
 system "javac /home/oracle/audit_auto/version3/src/*/*.java";
 print("\nCompiling main...");

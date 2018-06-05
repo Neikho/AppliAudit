@@ -22,7 +22,7 @@ public class ConfReader
     File v_targetDBFile                   = new File(v_targetDBFilePath);
     String[] supportedDb = {"Postgres", "Oracle", "Mysql"};
     //Parcours et extrait les données du fichier de conf de la DB cible vers un TreeMap.
-    //Paramètres de ce fichier de conf : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_SID, DB_USER, DB_PASS
+    //Paramètres de ce fichier de conf : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_SID, DB_USER, DB_PASS, DB_CLIENT, AUDIT_AUTHOR
     try
     {
       v_buffDbConf = new BufferedReader(new FileReader(v_targetDBFile));

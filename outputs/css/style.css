@@ -31,6 +31,7 @@ th
 .page
 {
   margin: auto;
+  width: 21cm;
   /*border: 2px solid red;*/
 }
 .nobreak
@@ -47,12 +48,23 @@ th
   width: 8%;
   height: auto;
 }
+#logoClient
+{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 #homepage
 {
   page-break-after: always;
+  padding-top: 10cm;
 }
 #auditTitle
 {
   font-size: 45px;
   color: purple;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  text-align: center;
 }
