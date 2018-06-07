@@ -7,8 +7,8 @@
   </query>
   <query id_query="2">
     <row id_row="2.1">
-      <valeur col="TOTAL GB">156.65</valeur>
-      <valeur col="SYSTEM GB">4.87</valeur>
+      <valeur col="TOTAL GB">156.67</valeur>
+      <valeur col="SYSTEM GB">4.89</valeur>
       <valeur col="SYSTEM FREE GB">.2</valeur>
       <valeur col="TEMP GB">19.4</valeur>
       <valeur col="UNDO GB">6</valeur>
@@ -19,8 +19,8 @@
   </query>
   <query id_query="3">
     <row id_row="3.1">
-      <valeur col="SID">73</valeur>
-      <valeur col="SERIAL#">10403</valeur>
+      <valeur col="SID">68</valeur>
+      <valeur col="SERIAL#">12897</valeur>
       <valeur col="USERNAME">SYSTEM</valeur>
       <valeur col="STATUS">ACTIVE</valeur>
       <valeur col="MACHINE">LA4ILINLOGALDB01</valeur>
@@ -38,12 +38,12 @@
   </query>
   <query id_query="5">
     <row id_row="5.1">
-      <valeur col="100*(1-(PR.VALUE/(BG.VALUE+CG.VALUE)))">6.86920450209187158718923224868920130962E01</valeur>
+      <valeur col="100*(1-(PR.VALUE/(BG.VALUE+CG.VALUE)))">7.02386193476839381526317350034005873414E01</valeur>
     </row>
   </query>
   <query id_query="6">
     <row id_row="6.1">
-      <valeur col="VALUE">98.65</valeur>
+      <valeur col="VALUE">98.72</valeur>
     </row>
   </query>
   <query id_query="7">

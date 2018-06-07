@@ -51,7 +51,7 @@ public class Query
     this.a_queryCols = a_queryCols;
   }
 
-//Execute et récupère les colonnes (metadata) de la query en cours récupérée du TreeMap.
+//Executes and retrieves columns(metadata) of current query retrieved from TreeMap.
   public void execQuery(Database p_database, String p_query)
   {
     try

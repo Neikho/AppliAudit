@@ -1,4 +1,3 @@
-//Importation des packages divers.
 import java.io.*;
 import java.util.TreeMap;
 import src.builders.*;
@@ -13,22 +12,20 @@ public class AuditMain
 {
     public static void main(String[] args)
     {
-      //Variables pour lire le fichier de conf contenant les infos de la DB cible (IP, port, user, pas ...).
+      //Variable which contains target database informations (IP, port, user, pas ...).
       TreeMap<String, String> v_mapDBConf   = new TreeMap<>();
-      //Variables pour lire le fichier des queries à executer.
-        TreeMap<Integer, String> v_mapQueries = new TreeMap<>();
-      //Variables pour la connection et execution vers la DB cible.
+      //Variable which contains queries to execute.
+      TreeMap<Integer, String> v_mapQueries = new TreeMap<>();
+
       Object v_database = null;
 
-      //Recupère la conf de la DB cible et les queries.
+      //Affects target database informations and queries to execute into variables.
       v_mapDBConf = ConfReader.getConf();
       v_mapQueries = ConfReader.getQueries();
 
-      System.out.println(v_mapDBConf.get("DB_CLIENT"));
-
-      //instanciation dynamique en fonction du sgbd.
       try
       {
+        //Dynamic instantiation corresponding to sgbd.
         String dbtype = "src.database."+v_mapDBConf.get("DB_TYPE");
         Class<?> clazz = Class.forName(dbtype);
         Class[] types = new Class[]{String.class, String.class, String.class, String.class, String.class};
@@ -38,7 +35,7 @@ public class AuditMain
         Method methodDisc = clazz.getSuperclass().getDeclaredMethod("disconnectDb");
         Method methodChkConn = clazz.getSuperclass().getDeclaredMethod("connectionState");
 
-        //Se connecte à la base.
+        //Connects to database.
         methodConn.invoke(v_database);
         boolean dbStatus = (boolean) methodChkConn.invoke(v_database);
         if (dbStatus)
@@ -46,13 +43,13 @@ public class AuditMain
         else
           System.out.println("Error, not connected to Database.");
 
-        //Appel de XmlBuilder.
+        //Call to XmlBuilder.
         XmlBuilder.main((Database) v_database, v_mapQueries);
 
-        //Appel de HtmlBuilder.
+        //Call to HtmlBuilder.
         HtmlBuilder.main((Database) v_database, v_mapDBConf.get("DB_CLIENT"), v_mapDBConf.get("AUDIT_AUTHOR"));
 
-        //Se déconnecte de la base.
+        //Disconnects from database.
         methodDisc.invoke(v_database);
         dbStatus = (boolean) methodChkConn.invoke(v_database);
         if (!dbStatus)

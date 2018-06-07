@@ -1,11 +1,9 @@
 package src.database;
 
-//Importation des packages div.
 import java.sql.*;
 
 public abstract class Database
 {
-  //Attributs.
   protected String a_dbIp;
   protected String a_dbPort;
   protected String a_dbSid;
@@ -46,7 +44,7 @@ public abstract class Database
 
   public abstract void connectDb();
 
-  //Déconnecte de la DB.
+  //Disconnects from database.
   public void disconnectDb()
   {
     try
@@ -59,7 +57,7 @@ public abstract class Database
     }
   }
 
-  //Récupère le statut de la connection à la DB (connecté/true déconnecté/false).
+  //Retrieves connection status to database.
   public Boolean connectionState()
   {
     Boolean v_dbState = false;

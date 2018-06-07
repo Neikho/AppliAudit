@@ -32,23 +32,21 @@ public class HtmlReplace
     {
 			fr = new FileReader(FILENAME);
 			br = new BufferedReader(fr);
+      //Reads hmtl output file.
 			while ((sCurrentLine = br.readLine()) != null)
       {
-				System.out.println(sCurrentLine);
         Matcher m = p.matcher(sCurrentLine);
+        //Checks if current line matches with regex.
         while (m.find())
         {
+          //If matches then extracts torep value and replaces it by html table containing corresponding query results.
           int idToRep = Integer.parseInt(m.group(1));
-          System.out.println(m.group(1));
           String _htmlTab = getValuesFromId(m.group(1));
 
           String _toRep = "\\$\\{torep\\_"+ idToRep +"\\}";
 
-          //_htmlTab = _htmlTab.replaceAll("\\$", "\\\\\\$");
           _htmlTab = _htmlTab.replaceAll("\\$", "\\\\\\$");
-          System.out.println(_htmlTab);
           sCurrentLine = sCurrentLine.replaceAll(_toRep, _htmlTab);
-          System.out.println(sCurrentLine);
         }
         _newFile = _newFile + sCurrentLine +"\n";
 			}
@@ -56,12 +54,13 @@ public class HtmlReplace
       try (BufferedWriter bw = new BufferedWriter(new FileWriter("./outputs/definitiveHtml.html")))
       {
         bw.write(_newFile);
-        System.out.println("Done");
+        bw.close();
       }
       catch (IOException e)
       {
         e.printStackTrace();
       }
+
 		}
     catch (IOException e)
     {
@@ -83,6 +82,7 @@ public class HtmlReplace
 		}
   }
 
+//This method browses values from xml file and builds corresponding html table to retrurn.
   public static String getValuesFromId(String idQuery)
   {
     String _htmlTab = new String("<table>");
@@ -92,7 +92,6 @@ public class HtmlReplace
     int _nbRow = 0;
     int _nbCell = 0;
     String _retIfSoloValue = "";
-    //Parseur et Document.
     try
     {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -128,7 +127,6 @@ public class HtmlReplace
                   {
                     _nbCell ++;
                     Element _valeurRowQuery = (Element) _rowQueryChildNodes.item(k);
-                    //System.out.println(_valeurRowQuery.getAttribute("col") + " /// " + _valeurRowQuery.getTextContent());
                     if(_needAddHEad)
                     {
                       _thead = _thead + "<th>" + _valeurRowQuery.getAttribute("col") + "</th>";
@@ -159,10 +157,9 @@ public class HtmlReplace
   }
   System.out.println("NBROW : " + _nbRow + " NBCELL : " + _nbCell);
 
+//Checks if only one value is returned by query, if so then it doesn't create a table.
   if(_nbRow == 1 && _nbCell == 1)
   {
-    //_htmlTab =  retourner la valeur seule.
-    System.out.println("SOLOSLOSLSOLOOOOOOOOOOOOOOOOOOO");
     _htmlTab = _retIfSoloValue;
   }
   else
@@ -171,7 +168,85 @@ public class HtmlReplace
     _tbody = _tbody + "</tbody>";
     _htmlTab = _htmlTab + _thead + _tbody + "</table>";
   }
-  System.out.println("BYYYYYYYYYYYYYYYYYYE");
   return _htmlTab;
+  }
+
+  //This methodes build up the summary from definitiveHtml.html file
+  public static void buildSummary(String p_FILENAME)
+  {
+    BufferedReader br = null;
+    FileReader fr = null;
+    String sCurrentLine;
+    Pattern p = Pattern.compile("\\$\\{torep\\_(summary)\\}");
+    Pattern _h1 = Pattern.compile("\\<h1\\>([a-zA-Z0-9\\s\\$\\{\\_\\}\\,\\.\\/]+)\\</h1\\>");
+    Pattern _h2 = Pattern.compile("\\<h2\\>([a-zA-Z0-9\\.\\s\\$\\{\\_\\}\\,\\/]+)\\</h2\\>");
+    Pattern _h3 = Pattern.compile("\\<h3\\>([a-zA-Z0-9\\.\\s\\$\\{\\_\\}\\,\\/]+)\\</h3\\>");
+    Sommaire summary = new Sommaire();
+    String _newFile = "";
+    try
+    {
+      fr = new FileReader("./outputs/definitiveHtml.html");
+      br = new BufferedReader(fr);
+      //Reads hmtl definitive output file.
+      while ((sCurrentLine = br.readLine()) != null)
+      {
+        Matcher mh1 = _h1.matcher(sCurrentLine);
+        Matcher mh2 = _h2.matcher(sCurrentLine);
+        Matcher mh3 = _h3.matcher(sCurrentLine);
+
+        //Extracts from matcher h1 and h2 value to add them to summary.
+        while(mh1.find())
+        {
+          summary.addH1(mh1.group(1));
+        }
+        while(mh2.find())
+        {
+          summary.addH2(mh2.group(1));
+        }
+        while(mh3.find())
+        {
+          summary.addH3(mh3.group(1));
+        }
+      }
+      fr = new FileReader("./outputs/definitiveHtml.html");
+      br = new BufferedReader(fr);
+      //Replaces bind variable by the build summary
+      while ((sCurrentLine = br.readLine()) != null)
+      {
+        Matcher m = p.matcher(sCurrentLine);
+        if(m.find())
+        {
+          String _toRep = "\\$\\{torep\\_summary\\}";
+          sCurrentLine = sCurrentLine.replaceAll(_toRep, summary.buildSummary());
+        }
+        _newFile = _newFile + sCurrentLine +"\n";
+      }
+      try (BufferedWriter bw = new BufferedWriter(new FileWriter("./outputs/definitiveHtml.html")))
+      {
+        bw.write(_newFile);
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    finally
+    {
+      try
+      {
+        if (br != null)
+          br.close();
+        if (fr != null)
+          fr.close();
+      }
+      catch (IOException ex)
+      {
+        ex.printStackTrace();
+      }
+    }
   }
 }

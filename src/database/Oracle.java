@@ -4,7 +4,6 @@ import java.sql.*;
 
 public class Oracle extends Database
 {
-  //Constructeurs.
   public Oracle(String p_dbIp, String p_dbPort, String p_dbSid, String p_dbPass, String p_dbUser)
   {
     this.a_dbIp = p_dbIp;
@@ -16,8 +15,7 @@ public class Oracle extends Database
     this.a_dbCon = null;
   }
 
-  //Methodes.
-  //Connecte à la DB.
+  //Connects to database.
   @Override
   public void connectDb()
   {

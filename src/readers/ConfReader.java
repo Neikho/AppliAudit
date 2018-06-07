@@ -1,6 +1,5 @@
 package src.readers;
 
-//Importation des packages divers.
 import java.io.*;
 import java.util.TreeMap;
 import java.util.Arrays;
@@ -11,7 +10,7 @@ public class ConfReader
 {
   public static TreeMap<String, String> getConf()
   {
-    //Variables pour lire le fichier de conf contenant les infos de la DB cible (IP, port, user, pas ...).
+    //Variables to read conf file containing target database informations (IP, port, user, pas ...).
     BufferedReader v_buffDbConf           = null;
       int v_isReading                     = 1;
     TreeMap<String, String> v_mapDBConf   = new TreeMap<>();
@@ -21,8 +20,7 @@ public class ConfReader
     String v_targetDBFilePath             = new String("./conf/targetDB.conf");
     File v_targetDBFile                   = new File(v_targetDBFilePath);
     String[] supportedDb = {"Postgres", "Oracle", "Mysql"};
-    //Parcours et extrait les données du fichier de conf de la DB cible vers un TreeMap.
-    //Paramètres de ce fichier de conf : DB_IP_ADDR, DB_PORT, DB_TYPE, DB_SID, DB_USER, DB_PASS, DB_CLIENT, AUDIT_AUTHOR
+    //Browses and extracts data from conf file to a TreeMap. Params: DB_IP_ADDR, DB_PORT, DB_TYPE, DB_SID, DB_USER, DB_PASS, DB_CLIENT, AUDIT_AUTHOR
     try
     {
       v_buffDbConf = new BufferedReader(new FileReader(v_targetDBFile));
@@ -63,7 +61,7 @@ public class ConfReader
         e.printStackTrace();
       }
     }
-    //Check valeur pour db_type correcte pour instanciation dynamique.
+    //Checks if db_type is supported by the application for dynamical instanciation.
     if(!Arrays.asList(supportedDb).contains(v_mapDBConf.get("DB_TYPE")))
     {
       try
@@ -80,7 +78,7 @@ public class ConfReader
 
   public static TreeMap<Integer, String> getQueries()
   {
-    //Variables pour lire le fichier des queries à executer.
+    //Variables to read the file containing queries to execute.
     BufferedReader v_buffQueries          = null;
     TreeMap<Integer, String> v_mapQueries = new TreeMap<>();
       Integer v_compteur                  = 0;
@@ -90,7 +88,7 @@ public class ConfReader
     File v_targetQueriesFile              = new File(v_targetQueriesFilePath);
     Pattern p = Pattern.compile("\\#\\[Q([0-9]+)\\]");   // the pattern to search for
 
-    //Parcours et extrait les données du fichier des queries vers un TreeMap.
+    //Browses and extracts datas from queries file to a TreeMap.
     try
     {
       v_buffQueries = new BufferedReader(new FileReader(v_targetQueriesFile));

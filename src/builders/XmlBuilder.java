@@ -1,6 +1,5 @@
 package src.builders;
 
-//Importation des packages divers.
 import src.database.*;
 import java.io.*;
 import java.util.TreeMap;
@@ -26,10 +25,10 @@ public class XmlBuilder
     String v_xmlFilePath                    = new String("./outputs/auditResult.xml");
       File v_xmlFile                        = new File(v_xmlFilePath);
     Query queryObj = new Query();
-    //Parcours et execute les queries extraites du fichier.
+    //Summary : Browse and executes queries extracted from file.
     try
     {
-      //Créer ou écrase le fichier auditResult.xml
+      //Creates or overwrites the file auditResult.xml
       if(v_xmlFile.exists())
       {
         v_xmlFile.delete();
@@ -37,14 +36,14 @@ public class XmlBuilder
       }
       else
         v_xmlFile.createNewFile();
-      //Variables pour écriture du document XML.
+      //Variables for XML output document.
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
       Document doc = dBuilder.newDocument();
-      //Création du noeud racine du doc XML.
+      //Creates root Node of XML document.
       Element rootElement = doc.createElement("queries");
       doc.appendChild(rootElement);
-      //Parcoure du TreeMap contenant les queries à executer.
+      //Browses TreeMap containing queries to execute.
       for(Map.Entry<Integer,String> entry : p_mapQueries.entrySet())
       {
         //v_key = query key value, v_query = the query text.
@@ -52,29 +51,29 @@ public class XmlBuilder
         String v_query = entry.getValue();
         System.out.println(v_key + " => " + v_query);
 
-        //Execute the query
+        //Executes the query
         queryObj.execQuery(p_database, v_query);
 
-        //Création du sous noeud de racine -> query et affectation d'un attribut incrémenté id_query.
+        //Creates nodes under root node (query) and affects to it an attibrute containing id_query to xml file.
         Element query = doc.createElement("query");
         rootElement.appendChild(query);
         Attr attr2 = doc.createAttribute("id_query");
         attr2.setValue(String.valueOf(v_key));
         query.setAttributeNode(attr2);
-        //Check si query ne retourne aucune row, alors on affecte quand même la structure (colonnes) afin de récupérer le squelette pour builder le fichier HTML.
+        //Checks if the query returns no row, if so then still affects the structure (metadata) in order to retrieve the skeleton to build the html file.
         if(!queryObj.getQueryRes().isBeforeFirst())
         {
-          //Création du sous noeud de query row et affectation d'un attribut incrémenté id_row.
+          //Creates nodes under query node (row) and affects to it an incremented attribute id_row to xml file.
           Element row = doc.createElement("row");
           query.appendChild(row);
           Attr attr3 = doc.createAttribute("id_row");
           attr3.setValue(String.valueOf(v_key)+"."+String.valueOf(v_compteur_2));
           row.setAttributeNode(attr3);
 
-          //Récupère chaque colonne de la row en cours, ajout de ces colonnes au fichier XML.
+          //Retrieves each columns of current row, and adds them to xml file.
           for(int i = 1; i <= queryObj.getQueryCols().getColumnCount(); i++)
           {
-            //AJout du sous noeud de row valeur et ajout du nom de la colonne en cours en attribut et sa valeur en valeur.
+            //Adds node under row node (valeur), and affects to it the value and an attribute corresponding to current column to xml file.
             Element valeur = doc.createElement("valeur");
             row.appendChild(valeur);
             Attr attr4 = doc.createAttribute("col");
@@ -82,22 +81,20 @@ public class XmlBuilder
             valeur.setAttributeNode(attr4);
           }
         }
-        //
-        //Parcoure les rows de la query en cours.
+        //Browses rows of current query.
         while(queryObj.getQueryRes().next())
         {
-          //Création du sous noeud de query row et affectation d'un attribut incrémenté id_row.
+          //Creates nodes under query node (row) and affects to it an incremented attribute id_row to xml file.
           Element row = doc.createElement("row");
           query.appendChild(row);
           Attr attr3 = doc.createAttribute("id_row");
           attr3.setValue(String.valueOf(v_key)+"."+String.valueOf(v_compteur_2));
           row.setAttributeNode(attr3);
 
-          //Récupère la donnée chaque colonne de la row en cours.
-          //Parcoure chaque colonne de la row en cours.
+          //Browses and retrieves each column of current row.
           for(int i = 1; i <= queryObj.getQueryCols().getColumnCount(); i++)
           {
-            //AJout du sous noeud de row valeur et ajout du nom de la colonne en cours en attribut et sa valeur en valeur.
+            //Creates nodes under query node (row) and affects to it an incremented attribute id_row to xml file.
             Element valeur = doc.createElement("valeur");
             row.appendChild(valeur);
             Attr attr4 = doc.createAttribute("col");
@@ -111,7 +108,7 @@ public class XmlBuilder
         v_compteur_2 = 1;
         System.out.println("\n**********************************");
       }
-      //Ecrit le contenu dans le fichier XML.
+      //Writes the content into xml file.
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
 

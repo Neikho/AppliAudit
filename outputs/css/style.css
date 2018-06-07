@@ -4,28 +4,52 @@
   font-size: 15px;
 }
 
+h1, .big
+{
+  color: FireBrick;
+  font-size: 25px;
+  font-weight: bold;
+}
+h2, .medium
+{
+  color: DarkBlue;
+  font-size: 20px;
+  font-weight: bold;
+}
+h3, .small
+{
+  color: DarkBlue;
+}
+li
+{
+  margin: 10px;
+}
+
+a
+{
+  text-decoration: none;
+}
+
 table
 {
   text-align: right;
   background-color: white;
   color: black;
-  border: 0.3px solid black;
+  border: 1px solid black;
   border-collapse: collapse;
   margin-top: 20px;
 }
 td
 {
-  border: 0.3px solid black;
+  border: 1px solid black;
   padding-right: 3px;
   overflow: hidden;
 }
 th
 {
   text-align: center;
-  border: 0.3px solid black;
+  border: 1px solid black;
 }
-/*td, th { width: 30px; overflow: hidden; }
-   table { width : 90px; table-layout: fixed; }*/
 
 /*classe*/
 .page
@@ -58,6 +82,10 @@ th
 {
   page-break-after: always;
   padding-top: 10cm;
+}
+#summary
+{
+  height: 31.1cm;
 }
 #auditTitle
 {
