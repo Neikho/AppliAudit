@@ -20,7 +20,7 @@
   <query id_query="3">
     <row id_row="3.1">
       <valeur col="SID">68</valeur>
-      <valeur col="SERIAL#">12897</valeur>
+      <valeur col="SERIAL#">13077</valeur>
       <valeur col="USERNAME">SYSTEM</valeur>
       <valeur col="STATUS">ACTIVE</valeur>
       <valeur col="MACHINE">LA4ILINLOGALDB01</valeur>
@@ -38,7 +38,7 @@
   </query>
   <query id_query="5">
     <row id_row="5.1">
-      <valeur col="100*(1-(PR.VALUE/(BG.VALUE+CG.VALUE)))">7.02386193476839381526317350034005873414E01</valeur>
+      <valeur col="100*(1-(PR.VALUE/(BG.VALUE+CG.VALUE)))">7.02522756250755925765550835603803495308E01</valeur>
     </row>
   </query>
   <query id_query="6">

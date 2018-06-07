@@ -24,8 +24,8 @@ public class HtmlBuilder
   {
     String v_xmlFilePath                    = new String("./outputs/auditResult.xml");
       File v_xmlFile                        = new File(v_xmlFilePath);
-    String v_auditOutputFileName             = new String("./outputs/auditOutput.html");
-      File v_auditOutputFile                 = new File(v_auditOutputFileName);
+    String v_auditOutputFileName            = new String("./outputs/auditOutput.html");
+      File v_auditOutputFile                = new File(v_auditOutputFileName);
       FileWriter v_auditOutputFileB;
       BufferedWriter bw = null;
     try
@@ -55,34 +55,17 @@ public class HtmlBuilder
             "<p>${torep_summary}</p>"+
           "</section>"+
           "<section class=\"page\">"+
-              "<div class=\"nobreak\">Volume global de la database ${torep_2}</div>"+
-              "<div class=\"nobreak\">Infos générales sur les sessions ${torep_3}</div>"+
-              "<div class=\"nobreak\">Nombre de sessions par machine ${torep_4}</div>"+
-              "<div class=\"nobreak\">Cache hit ratio ${torep_5}</div>"+
-              "<div class=\"nobreak\" id=\"1\"><h1>1 CPU, RAM</h1></div>"+
+              "<div class=\"nobreak\"></div>"+
+              "<div class=\"nobreak\" id=\"1\"><h1>1 Volume global de la database</h1>${torep_2}</div>"+
               "<div class=\"nobreak\" id=\"2\"><h1>2 Hit ratio de la PGA</h1>${torep_6}</div>"+
               "<div class=\"nobreak\" id=\"2.1\"><h2>2.1 Nombre de locks</h2>${torep_7}</div>"+
-              "<div class=\"nobreak\" id=\"2.2\"><h2>2.2 Objets lockes</h2>${torep_8}</div>"+
-              "<div class=\"nobreak\" id=\"2.2.1\"><h3>2.2.1 Tables lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.2.2\"><h3>2.2.2 Sessions lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.2.3\"><h3>2.2.3 Sessions lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.2.4\"><h3>2.2.4 Sessions lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.2.5\"><h3>2.2.5 Sessions lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.2.6\"><h3>2.2.6 Sessions lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.2.7\"><h3>2.2.7 Sessions lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.2.8\"><h3>2.2.8 Sessions lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.2.9\"><h3>2.2.9 Sessions lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.2.10\"><h3>2.2.10 Sessions lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.2.11\"><h3>2.2.11 Sessions lockees</h3></div>"+
-              "<div class=\"nobreak\" id=\"2.3\"><h2>2.3 Objets lockes</h2>${torep_8}</div>"+
-              "<div class=\"nobreak\" id=\"2.4\"><h2>2.4 Objets lockes</h2>${torep_8}</div>"+
-              "<div class=\"nobreak\" id=\"2.5\"><h2>2.5 Objets lockes</h2>${torep_8}</div>"+
-              "<div class=\"nobreak\" id=\"2.6\"><h2>2.6 Objets lockes</h2>${torep_8}</div>"+
-              "<div class=\"nobreak\" id=\"2.7\"><h2>2.7 Objets lockes</h2>${torep_8}</div>"+
-              "<div class=\"nobreak\" id=\"2.8\"><h2>2.8 Objets lockes</h2>${torep_8}</div>"+
-              "<div class=\"nobreak\" id=\"2.9\"><h2>2.9 Objets lockes</h2>${torep_8}</div>"+
-              "<div class=\"nobreak\" id=\"2.10\"><h2>2.10 Objets lockes</h2>${torep_8}</div>"+
-              "<div class=\"nobreak\" id=\"2.11\"><h2>2.11 Objets lockes</h2>${torep_8}</div>"+
+              "<div class=\"nobreak\" id=\"2.2\"><h2>2.2 Objets lockes</h2>${torep_1}</div>"+
+              "<div class=\"nobreak\" id=\"2.2.1\"><h3>2.2.1 Tables lockees</h3>${torep_4}</div>"+
+              "<div class=\"nobreak\" id=\"2.2.2\"><h3>2.2.2 Sessions lockees</h3>${torep_7}</div>"+
+              "<div class=\"nobreak\" id=\"2.3\"><h2>2.3 Objets lockes</h2>${torep_9}</div>"+
+              "<div class=\"nobreak\" id=\"2.4\"><h2>2.4 Objets lockes</h2>${torep_10}</div>"+
+              "<div class=\"nobreak\" id=\"2.10\"><h2>2.10 Objets lockes</h2>${torep_3}</div>"+
+              "<div class=\"nobreak\" id=\"2.11\"><h2>2.11 Objets lockes</h2>${torep_4}</div>"+
               "<div class=\"nobreak\" id=\"3\"><h1>3 Sessions</h1></div>"+
               "<div class=\"nobreak\" id=\"3.1\"><h2>3.1 Sessions ouvertes</h2></div>"+
               "<div class=\"nobreak\" id=\"4\"><h1>4 Contenu table combo_chk</h1>${torep_9}</div>"+
@@ -92,7 +75,7 @@ public class HtmlBuilder
       "</html>");
       bw.close();
       HtmlReplace.main(v_auditOutputFileName);
-      HtmlReplace.buildSummary(v_auditOutputFileName);
+      HtmlReplace.prepareSummary(v_auditOutputFileName);
     }
     catch (final IOException e)
     {

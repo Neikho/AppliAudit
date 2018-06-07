@@ -172,7 +172,7 @@ public class HtmlReplace
   }
 
   //This methodes build up the summary from definitiveHtml.html file
-  public static void buildSummary(String p_FILENAME)
+  public static void prepareSummary(String p_FILENAME)
   {
     BufferedReader br = null;
     FileReader fr = null;

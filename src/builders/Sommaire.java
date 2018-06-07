@@ -53,7 +53,7 @@ public class Sommaire
         if(test.startsWith(String.valueOf(i+1)))
         {
           //If so create new title in summary
-          this.a_sommaire = this.a_sommaire + "<li><a href=\"#"+test.substring(0)+"\" class=\"big\">"+test+"</a></li><ul>";
+          this.a_sommaire = this.a_sommaire + "<li><a href=\"#"+test.substring(0,1)+"\" class=\"big\">"+test+"</a></li><ul>";
           for(String test2 : this._h2List)
           {
             lastMain = test2.substring(0);
