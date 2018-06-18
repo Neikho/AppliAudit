@@ -1,3 +1,20 @@
+/*# ==========================================================================================================================
+# This class reads target database configuration and extracts these conf parameters to a treemap.
+# This class also reads file contaning queries to be executed on target database and extracts these queries to a treemap.
+#
+# Author : Alba Thomas (All4it)
+#
+# Creation date : 2018 April
+#
+# Revisions
+# ------------------------------------------------------------------------------------------------------------------------
+# Version | Date       | Author                            | Comments
+# ------------------------------------------------------------------------------------------------------------------------
+# 1.0     | 2018/05    | Alba Thomas (All4it)              | Initial version
+#
+# ------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================
+*/
 package src.readers;
 
 import java.io.*;
@@ -100,10 +117,8 @@ public class ConfReader
         Matcher m = p.matcher(v_concat);
         if(m.find())
         {
-          System.out.println(m.group(1));
           v_toAddMap = v_toAddMap.replaceAll("\\#\\[Q[0-9]+\\]", "");
           v_compteur  = Integer.parseInt(m.group(1));
-          System.out.println(v_toAddMap + " COMPTEUR : " + v_compteur);
         }
         if (v_concat.contains(";"))
         {

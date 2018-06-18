@@ -1,3 +1,20 @@
+/*# ==========================================================================================================================
+# This class creates a summary that will be displayed in pdf output document.
+#
+# Author : Alba Thomas (All4it)
+#
+# Creation date : 2018 June
+#
+# Revisions
+# ------------------------------------------------------------------------------------------------------------------------
+# Version | Date       | Author                            | Comments
+# ------------------------------------------------------------------------------------------------------------------------
+# 1.0     | 2018/06    | Alba Thomas (All4it)              | Initial version
+#
+# ------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================
+*/
+
 package src.builders;
 
 import java.util.*;
@@ -45,6 +62,7 @@ public class Sommaire
   {
     int compteur = 0;
     String lastMain = "";
+    //Browses h1 list.
     for(String test : this._h1List)
     {
       for(int i = 0; i < this._h1List.size(); i++)
@@ -54,6 +72,7 @@ public class Sommaire
         {
           //If so create new title in summary
           this.a_sommaire = this.a_sommaire + "<li><a href=\"#"+test.substring(0,1)+"\" class=\"big\">"+test+"</a></li><ul>";
+          //browses h2 list.
           for(String test2 : this._h2List)
           {
             lastMain = test2.substring(0);

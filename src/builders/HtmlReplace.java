@@ -1,3 +1,20 @@
+/*# ==========================================================================================================================
+# This class will replace variables like ${torep_2} in the html structure file by the corresponding query result.
+#
+# Author : Alba Thomas (All4it)
+#
+# Creation date : 2018 June
+#
+# Revisions
+# ------------------------------------------------------------------------------------------------------------------------
+# Version | Date       | Author                            | Comments
+# ------------------------------------------------------------------------------------------------------------------------
+# 1.0     | 2018/06    | Alba Thomas (All4it)              | Initial version
+#
+# ------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================
+*/
+
 package src.builders;
 
 import java.io.*;
@@ -21,13 +38,18 @@ import org.w3c.dom.NodeList;
 
 public class HtmlReplace
 {
-  public static void main(String FILENAME)
+  public static void main(String FILENAME, String p_client, String p_author)
   {
     BufferedReader br = null;
 		FileReader fr = null;
     String sCurrentLine;
     String _newFile = "";
+    //Regex for replacement
     Pattern p = Pattern.compile("\\$\\{torep\\_([0-9]+)\\}");
+    Pattern patAuthor = Pattern.compile("\\$\\{torep\\_(author)\\}");
+    Pattern patTime = Pattern.compile("\\$\\{torep\\_(time)\\}");
+    Pattern patClient = Pattern.compile("\\$\\{torep\\_(client)\\}");
+    Pattern patClientLogo = Pattern.compile("\\$\\{torep\\_(clientLogo)\\}");
 		try
     {
 			fr = new FileReader(FILENAME);
@@ -36,7 +58,11 @@ public class HtmlReplace
 			while ((sCurrentLine = br.readLine()) != null)
       {
         Matcher m = p.matcher(sCurrentLine);
-        //Checks if current line matches with regex.
+        Matcher mAuth = patAuthor.matcher(sCurrentLine);
+        Matcher mTime = patTime.matcher(sCurrentLine);
+        Matcher mClient = patClient.matcher(sCurrentLine);
+        Matcher mClientLogo = patClientLogo.matcher(sCurrentLine);
+        //Checks if current line matches with each regex, if so then replace.
         while (m.find())
         {
           //If matches then extracts torep value and replaces it by html table containing corresponding query results.
@@ -48,10 +74,32 @@ public class HtmlReplace
           _htmlTab = _htmlTab.replaceAll("\\$", "\\\\\\$");
           sCurrentLine = sCurrentLine.replaceAll(_toRep, _htmlTab);
         }
+        while (mAuth.find())
+        {
+          String _toRep = "\\$\\{torep\\_author\\}";
+          sCurrentLine = sCurrentLine.replaceAll(_toRep, p_author);
+        }
+        while (mTime.find())
+        {
+          String _toRep = "\\$\\{torep\\_time\\}";
+          sCurrentLine = sCurrentLine.replaceAll(_toRep, ""+java.time.LocalDate.now());
+        }
+        while (mClient.find())
+        {
+          String _toRep = "\\$\\{torep\\_client\\}";
+          sCurrentLine = sCurrentLine.replaceAll(_toRep, p_client);
+        }
+        while (mClientLogo.find())
+        {
+          String _toRep = "\\$\\{torep\\_clientLogo\\}";
+          String p_clientb = p_client.replaceAll("\\s", "");
+          p_clientb = p_client.replaceAll("\\'", "");
+          sCurrentLine = sCurrentLine.replaceAll(_toRep, p_clientb);
+        }
         _newFile = _newFile + sCurrentLine +"\n";
 			}
 
-      try (BufferedWriter bw = new BufferedWriter(new FileWriter("./outputs/definitiveHtml.html")))
+      try (BufferedWriter bw = new BufferedWriter(new FileWriter("outputs/htmlFinal.html")))
       {
         bw.write(_newFile);
         bw.close();
@@ -155,7 +203,7 @@ public class HtmlReplace
   {
       e.printStackTrace();
   }
-  System.out.println("NBROW : " + _nbRow + " NBCELL : " + _nbCell);
+  //System.out.println("NBROW : " + _nbRow + " NBCELL : " + _nbCell);
 
 //Checks if only one value is returned by query, if so then it doesn't create a table.
   if(_nbRow == 1 && _nbCell == 1)
@@ -185,7 +233,7 @@ public class HtmlReplace
     String _newFile = "";
     try
     {
-      fr = new FileReader("./outputs/definitiveHtml.html");
+      fr = new FileReader(p_FILENAME);
       br = new BufferedReader(fr);
       //Reads hmtl definitive output file.
       while ((sCurrentLine = br.readLine()) != null)
@@ -208,7 +256,7 @@ public class HtmlReplace
           summary.addH3(mh3.group(1));
         }
       }
-      fr = new FileReader("./outputs/definitiveHtml.html");
+      fr = new FileReader(p_FILENAME);
       br = new BufferedReader(fr);
       //Replaces bind variable by the build summary
       while ((sCurrentLine = br.readLine()) != null)
@@ -221,7 +269,7 @@ public class HtmlReplace
         }
         _newFile = _newFile + sCurrentLine +"\n";
       }
-      try (BufferedWriter bw = new BufferedWriter(new FileWriter("./outputs/definitiveHtml.html")))
+      try (BufferedWriter bw = new BufferedWriter(new FileWriter("outputs/htmlFinal.html")))
       {
         bw.write(_newFile);
       }

@@ -1,0 +1,58 @@
+<!--
+# ==========================================================================================================================
+# Corresponds to the result that will be displayed in the pdf.
+# This is where we prepare the document structure.
+#
+# Author : Alba Thomas (All4it)
+#
+# Creation date : 2018 June
+#
+# Revisions
+# ------------------------------------------------------------------------------------------------------------------------
+# Version | Date       | Author                            | Comments
+# ------------------------------------------------------------------------------------------------------------------------
+# 1.0     | 2018/06    | Alba Thomas (All4it)              | Initial version
+#
+# ------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================
+!-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Audit ALL4IT</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+  <body>
+    <section class ="page" id = "homepage">
+      <img src="imgs/LOREAL.png" id="logoClient">
+      <p id = "auditTitle">Audit de la base LOGAL</p>
+      <br/><br/><br/><br/><br/><br/><p>Auteur : ALBA Thomas</p>
+      <p>Date : 2018-06-18</p>
+      <p>Version : 1.0</p>
+      <p>Diffusion : L'OREAL</p><br/><br/<br/><br/>
+      <p>Avertissement : </p><p style="color: red;">Ce document ne peut être reproduit ou diffusé sans autorisation préalable d’ALL4IT Ce document contient des informations confidentielles relatives au client  Ces informations ne doivent être utilisées que dans le cadre du projet en cours et doivent être considérées comme confidentielles.</p>
+    </section>
+    <section class ="page" id = "summary">
+      <p><p style = "font-size: 30px;">Sommaire:</p><ul><li><a href="#1" class="big">1 Volume global de la database</a></li><ul></ul><li><a href="#2" class="big">2 Hit ratio de la PGA</a></li><ul><li><a href="#2.1" class="medium">2.1 Nombre de locks</a></li><ul></ul><li><a href="#2.2" class="medium">2.2 Objets lockes</a></li><ul><li><a href="#2.2.1" class="small">2.2.1 Tables lockees</a></li><li><a href="#2.2.2" class="small">2.2.2 Sessions lockees</a></li></ul><li><a href="#2.3" class="medium">2.3 Objets lockes</a></li><ul></ul><li><a href="#2.4" class="medium">2.4 Objets lockes</a></li><ul></ul><li><a href="#2.10" class="medium">2.10 Objets lockes</a></li><ul></ul><li><a href="#2.11" class="medium">2.11 Objets lockes</a></li><ul></ul></ul><li><a href="#3" class="big">3 Sessions</a></li><ul><li><a href="#3.1" class="medium">3.1 Sessions ouvertes</a></li><ul></ul></ul><li><a href="#4" class="big">4 Contenu table combo_chk</a></li><ul><li><a href="#4.1" class="medium">4.1 Contenu table banques</a></li><ul></ul></ul></ul></p>
+    </section>
+    <section class="page">
+        <div class="nobreak"></div>
+        <div class="nobreak" id="1"><h1>1 Volume global de la database</h1><table><thead><tr><th>TOTAL GB</th><th>SYSTEM GB</th><th>SYSTEM FREE GB</th><th>TEMP GB</th><th>UNDO GB</th><th>DATA GB</th><th>DATA FREE GB</th><th>DATA PCT FREE</th></tr></thead><tbody><tr><td>156.75</td><td>4.97</td><td>.2</td><td>19.4</td><td>6</td><td>126.38</td><td>2.3</td><td>2</td></tr></tbody></table></div>
+        <div class="nobreak" id="2"><h1>2 Hit ratio de la PGA</h1>98.62</div>
+        <div class="nobreak" id="2.1"><h2>2.1 Nombre de locks</h2>0</div>
+        <div class="nobreak" id="2.2"><h2>2.2 Objets lockes</h2>LOGAL</div>
+        <div class="nobreak" id="2.2.1"><h3>2.2.1 Tables lockees</h3><table><thead><tr><th>MACHINE</th><th>COUNT(*)</th></tr></thead><tbody><tr><td>LA4ILINLOGALDB01</td><td>22</td></tr></tbody></table></div>
+        <div class="nobreak" id="2.2.2"><h3>2.2.2 Sessions lockees</h3>0</div>
+        <div class="nobreak" id="2.3"><h2>2.3 Objets lockes</h2><table><thead><tr><th>CC_COMBOCHKID</th><th>CC_LABEL</th><th>CC_TRANSLATION_01</th></tr></thead><tbody><tr><td>Y</td><td>Oui</td><td></td></tr><tr><td>N</td><td>Non</td><td></td></tr><tr><td>D</td><td></td><td></td></tr></tbody></table></div>
+        <div class="nobreak" id="2.4"><h2>2.4 Objets lockes</h2><table><thead><tr><th>ID_BANQUE</th><th>CODE_BANQUE</th><th>NOM</th><th>NOM_INTER</th><th>ADRESSE_1</th><th>ADRESSE_2</th><th>CODE_POSTAL</th><th>VILLE</th></tr></thead><tbody><tr><td>2</td><td>00021</td><td>CSAV TOURS</td><td></td><td>22 RUE DES FRERES LUMIERE</td><td></td><td>37170</td><td>CHAMBRAY LES TOURS</td></tr><tr><td>-999</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td>00122</td><td>CSAV BORDEAUX</td><td></td><td>2 CHEMIN DE LA GRANGE</td><td></td><td>33650</td><td>MARTILLAC</td></tr><tr><td>4</td><td>00039</td><td>CSAV TOULOUSE</td><td></td><td>4 RUE MAURICE CAUNES</td><td></td><td>31200</td><td>TOULOUSE</td></tr></tbody></table></div>
+        <div class="nobreak" id="2.10"><h2>2.10 Objets lockes</h2><table><thead><tr><th>SID</th><th>SERIAL#</th><th>USERNAME</th><th>STATUS</th><th>MACHINE</th><th>PROGRAM</th><th>PROCESS</th><th>LAST_CALL_ET</th><th>EVENT</th></tr></thead><tbody><tr><td>68</td><td>15205</td><td>SYSTEM</td><td>ACTIVE</td><td>LA4ILINLOGALDB01</td><td>JDBC Thin Client</td><td>1234</td><td>0</td><td>SQL*Net message to client</td></tr></tbody></table></div>
+        <div class="nobreak" id="2.11"><h2>2.11 Objets lockes</h2><table><thead><tr><th>MACHINE</th><th>COUNT(*)</th></tr></thead><tbody><tr><td>LA4ILINLOGALDB01</td><td>22</td></tr></tbody></table></div>
+        <div class="nobreak" id="3"><h1>3 Sessions</h1></div>
+        <div class="nobreak" id="3.1"><h2>3.1 Sessions ouvertes</h2></div>
+        <div class="nobreak" id="4"><h1>4 Contenu table combo_chk</h1><table><thead><tr><th>CC_COMBOCHKID</th><th>CC_LABEL</th><th>CC_TRANSLATION_01</th></tr></thead><tbody><tr><td>Y</td><td>Oui</td><td></td></tr><tr><td>N</td><td>Non</td><td></td></tr><tr><td>D</td><td></td><td></td></tr></tbody></table></div>
+        <div class="nobreak" id="4.1"><h2>4.1 Contenu table banques</h2><table><thead><tr><th>ID_BANQUE</th><th>CODE_BANQUE</th><th>NOM</th><th>NOM_INTER</th><th>ADRESSE_1</th><th>ADRESSE_2</th><th>CODE_POSTAL</th><th>VILLE</th></tr></thead><tbody><tr><td>2</td><td>00021</td><td>CSAV TOURS</td><td></td><td>22 RUE DES FRERES LUMIERE</td><td></td><td>37170</td><td>CHAMBRAY LES TOURS</td></tr><tr><td>-999</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td>00122</td><td>CSAV BORDEAUX</td><td></td><td>2 CHEMIN DE LA GRANGE</td><td></td><td>33650</td><td>MARTILLAC</td></tr><tr><td>4</td><td>00039</td><td>CSAV TOULOUSE</td><td></td><td>4 RUE MAURICE CAUNES</td><td></td><td>31200</td><td>TOULOUSE</td></tr></tbody></table></div>
+      </section>
+  </body>
+</html>"

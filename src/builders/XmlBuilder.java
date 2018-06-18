@@ -1,3 +1,19 @@
+/*# ==========================================================================================================================
+# This class builds the xml file containing executed queries and their result.
+#
+# Author : Alba Thomas (All4it)
+#
+# Creation date : 2018 June
+#
+# Revisions
+# ------------------------------------------------------------------------------------------------------------------------
+# Version | Date       | Author                            | Comments
+# ------------------------------------------------------------------------------------------------------------------------
+# 1.0     | 2018/06    | Alba Thomas (All4it)              | Initial version
+#
+# ------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================
+*/
 package src.builders;
 
 import src.database.*;
@@ -49,7 +65,6 @@ public class XmlBuilder
         //v_key = query key value, v_query = the query text.
         Integer v_key = entry.getKey();
         String v_query = entry.getValue();
-        System.out.println(v_key + " => " + v_query);
 
         //Executes the query
         queryObj.execQuery(p_database, v_query);
@@ -106,7 +121,6 @@ public class XmlBuilder
           v_compteur_2 = v_compteur_2 + 1;
         }
         v_compteur_2 = 1;
-        System.out.println("\n**********************************");
       }
       //Writes the content into xml file.
       TransformerFactory transformerFactory = TransformerFactory.newInstance();

@@ -1,3 +1,19 @@
+/*# ==========================================================================================================================
+# This java file corresponds to the main of the audit application.
+#
+# Author : Alba Thomas (All4it)
+#
+# Creation date : 2018 March
+#
+# Revisions
+# ------------------------------------------------------------------------------------------------------------------------
+# Version | Date       | Author                            | Comments
+# ------------------------------------------------------------------------------------------------------------------------
+# 1.0     | 2018/03    | Alba Thomas (All4it)              | Initial version
+#
+# ------------------------------------------------------------------------------------------------------------------------
+# ==========================================================================================================================
+*/
 import java.io.*;
 import java.util.TreeMap;
 import src.builders.*;
@@ -47,7 +63,8 @@ public class AuditMain
         XmlBuilder.main((Database) v_database, v_mapQueries);
 
         //Call to HtmlBuilder.
-        HtmlBuilder.main((Database) v_database, v_mapDBConf.get("DB_CLIENT"), v_mapDBConf.get("AUDIT_AUTHOR"));
+        HtmlReplace.main("outputs/auditTemplate.html", v_mapDBConf.get("DB_CLIENT"), v_mapDBConf.get("AUDIT_AUTHOR"));
+        HtmlReplace.prepareSummary("outputs/htmlFinal.html");
 
         //Disconnects from database.
         methodDisc.invoke(v_database);
